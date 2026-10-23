@@ -48,7 +48,7 @@ export const site = parseSite({
   name: 'Noir CLI',
   terminalLabel: '~/noir-cli',
   url: resolveSiteUrl(process.env.SITE_URL),
-  repository: 'https://github.com/example/noir-cli',
+  repository: 'https://github.com/nandomoreirame/terminalnoir-astro-theme',
   author: 'Your name',
   version: '0.1.0',
   ctas: {

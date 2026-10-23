@@ -3,6 +3,7 @@ import { site, parseSite, resolveSiteUrl } from './site';
 
 it('provides replaceable product identity', () => {
   expect(site.name).toBe('Noir CLI');
+  expect(site.repository).toBe('https://github.com/nandomoreirame/terminalnoir-astro-theme');
   expect(site.url).toBe('https://example.com');
   expect(site.install[0].command).toContain('example');
 });
