@@ -83,13 +83,9 @@ export const site = parseSite({
   nav: [
     { href: '/', key: 'nav.home' },
     { href: '/jichang', key: 'nav.jichang' },
-    { href: '/tizi', key: 'nav.tizi' },
-    { href: '/vpn', key: 'nav.vpn' },
-    { href: '/clash', key: 'nav.clash' },
-    { href: '/nodes', key: 'nav.nodes' },
     { href: '/brands', key: 'nav.brands' },
-    { href: '/tutorial', key: 'nav.tutorial' },
-    { href: '/free', key: 'nav.free' },
+    { href: '/topics', key: 'nav.topics' },
+    { href: '/clients', key: 'nav.clients' },
     { href: '/about', key: 'nav.about' },
   ],
   hero: {
