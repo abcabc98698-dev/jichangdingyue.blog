@@ -1,0 +1,137 @@
+---
+import { brands } from '../data/brands';
+---
+
+<div class="my-8 rounded-xl border border-hairline bg-[#0D1117] p-5 md:p-6 font-mono text-xs shadow-2xl">
+  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-hairline/60 pb-4 mb-4">
+    <div>
+      <h3 class="text-base font-bold text-fg flex items-center gap-2">
+        <span class="inline-block size-2 rounded-full bg-emerald-400"></span>
+        42 家机场品牌全景横评数据大表
+      </h3>
+      <p class="text-xs text-muted mt-1">
+        包含线路类型、起步价格、核心协议、实测认证徽章及官方测速图谱全景比选
+      </p>
+    </div>
+    <div class="flex items-center gap-2">
+      <span class="text-[11px] font-bold text-emerald-400 rounded bg-emerald-950/80 px-2.5 py-1 border border-emerald-500/40">
+        ✓ 17 家官方实测认证
+      </span>
+      <span class="text-[11px] text-muted rounded bg-raised px-2.5 py-1 border border-hairline">
+        收录 {brands.length} 款品牌
+      </span>
+    </div>
+  </div>
+
+  <div class="overflow-x-auto pb-1">
+    <table class="w-full text-left border-collapse min-w-[760px]">
+      <thead>
+        <tr class="border-b border-hairline/80 text-muted text-[11px] uppercase tracking-wider bg-raised/50 whitespace-nowrap">
+          <th class="py-3 px-3">排名/品牌</th>
+          <th class="py-3 px-3">线路类型</th>
+          <th class="py-3 px-3">协议支持</th>
+          <th class="py-3 px-3">起步价格</th>
+          <th class="py-3 px-3">晚高峰实测表现</th>
+          <th class="py-3 px-4 text-right whitespace-nowrap sticky right-0 bg-[#161B22] z-20 shadow-[-6px_0_10px_rgba(0,0,0,0.5)]">评测 / 官网</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-hairline/40">
+        {brands.map(b => {
+          const topNode = b.speedtest.nodes[0];
+          return (
+            <tr class="hover:bg-raised/40 transition-colors group">
+              <td class="py-3 px-3">
+                <div class="flex items-center gap-2">
+                  {b.rank ? (
+                    <span class="inline-flex size-5 items-center justify-center rounded bg-accent/20 text-[10px] font-bold text-accent shrink-0">
+                      #{b.rank}
+                    </span>
+                  ) : (
+                    <span class="inline-flex size-5 items-center justify-center rounded bg-base text-[10px] text-muted shrink-0">
+                      -
+                    </span>
+                  )}
+                  {b.logoUrl && (
+                    <img
+                      src={b.logoUrl}
+                      alt={`${b.name} logo`}
+                      class="size-5 rounded border border-hairline/60 bg-base p-0.5 object-contain shrink-0"
+                      loading="lazy"
+                    />
+                  )}
+                  <div class="flex items-center gap-1.5 truncate">
+                    <a
+                      href={`/brands/${b.slug}`}
+                      class="font-bold text-fg hover:text-accent transition-colors"
+                    >
+                      {b.name}
+                    </a>
+                    {b.isVerified && (
+                      <span class="rounded bg-emerald-950/80 px-1.5 py-0.2 text-[10px] font-bold text-emerald-400 border border-emerald-500/40 shrink-0">
+                        ✓实测
+                      </span>
+                    )}
+                  </div>
+                </div>
+              </td>
+
+              <td class="py-3 px-3">
+                <span class="rounded bg-base px-2 py-0.5 text-[11px] text-fg border border-hairline truncate max-w-[180px] inline-block">
+                  {b.lineType}
+                </span>
+              </td>
+
+              <td class="py-3 px-3 text-muted">
+                {b.protocols.join(', ')}
+              </td>
+
+              <td class="py-3 px-3 font-semibold text-emerald-400 whitespace-nowrap">
+                {b.startingPrice}
+              </td>
+
+              <td class="py-3 px-3 whitespace-nowrap">
+                {topNode ? (
+                  <div class="flex items-center gap-1.5 text-muted text-[11px]">
+                    <span class="size-1.5 rounded-full bg-emerald-400 shrink-0"></span>
+                    <span>{topNode.region}:</span>
+                    <span class="text-fg font-medium">{topNode.latency}</span>
+                    <span class="text-accent font-semibold">{topNode.download}</span>
+                    {b.proofImages?.speedtest && (
+                      <span class="text-[10px] text-emerald-400/90 font-mono" title="附带真实测速截图证据">📸</span>
+                    )}
+                  </div>
+                ) : (
+                  <span class="text-muted/60 text-[11px]">资料归档待测</span>
+                )}
+              </td>
+
+              <td class="py-3 px-4 text-right whitespace-nowrap sticky right-0 bg-[#0D1117] group-hover:bg-[#161F2E] transition-colors z-10 shadow-[-6px_0_10px_rgba(0,0,0,0.5)]">
+                <div class="inline-flex items-center justify-end gap-2 text-[11px] whitespace-nowrap shrink-0">
+                  <a
+                    href={`/brands/${b.slug}`}
+                    class="rounded border border-outline bg-base px-2.5 py-1 text-fg hover:border-accent hover:text-accent transition-colors shrink-0"
+                  >
+                    实测
+                  </a>
+                  <a
+                    href={`/go/${b.slug}`}
+                    target="_blank"
+                    rel="nofollow sponsored noopener"
+                    class="rounded bg-accent px-2.5 py-1 font-semibold text-on-accent hover:opacity-90 transition-opacity shrink-0"
+                  >
+                    直达 →
+                  </a>
+                </div>
+              </td>
+            </tr>
+          );
+        })}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="mt-4 border-t border-hairline/60 pt-3 text-[11px] text-muted flex flex-col sm:flex-row justify-between gap-2">
+    <span>说明：起步价折合月付计算；带【✓实测 / 📸】徽章的品牌附带 MAI-TEST-BOT 真机测速与流媒体解锁截图。</span>
+    <span>PANEL_MATRIX: 42_FULL_BRANDS_VERIFIED</span>
+  </div>
+</div>

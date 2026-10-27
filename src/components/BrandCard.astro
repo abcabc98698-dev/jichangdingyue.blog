@@ -1,0 +1,107 @@
+---
+import type { Brand } from '../data/brands';
+
+interface Props {
+  brand: Brand;
+}
+
+const { brand } = Astro.props;
+const topSpeedNode = brand.speedtest.nodes[0];
+---
+
+<article class="group relative flex flex-col justify-between rounded-lg border border-hairline bg-raised/40 p-5 transition-all duration-200 hover:border-accent/60 hover:bg-raised/70">
+  <div>
+    <!-- Top row: Rank, Logo & Name -->
+    <div class="flex items-center justify-between gap-2 mb-3">
+      <div class="flex items-center gap-2.5">
+        {brand.rank && (
+          <span class="inline-flex size-6 items-center justify-center rounded bg-accent/20 font-mono text-xs font-bold text-accent border border-accent/30 shrink-0">
+            #{brand.rank}
+          </span>
+        )}
+        {brand.logoUrl && (
+          <img
+            src={brand.logoUrl}
+            alt={`${brand.name} logo`}
+            class="size-7 rounded border border-hairline bg-base p-0.5 object-contain shrink-0"
+            loading="lazy"
+          />
+        )}
+        <h3 class="font-mono text-base font-bold text-fg group-hover:text-accent transition-colors truncate">
+          <a href={`/brands/${brand.slug}`}>
+            {brand.name}
+          </a>
+        </h3>
+      </div>
+      <span class="font-mono text-sm font-semibold text-emerald-400 shrink-0">
+        {brand.startingPrice}
+      </span>
+    </div>
+
+    <!-- Verified & Line type & Protocols -->
+    <div class="flex flex-wrap items-center gap-1.5 mb-3 font-mono text-[11px]">
+      {brand.isVerified && (
+        <span class="rounded bg-emerald-950/80 px-2 py-0.5 font-bold text-emerald-400 border border-emerald-500/40 flex items-center gap-1 shadow-sm">
+          <span>✓</span> 实测认证
+        </span>
+      )}
+      <span class="rounded bg-elevated px-2 py-0.5 text-fg border border-hairline truncate max-w-[200px]">
+        {brand.lineType}
+      </span>
+      <span class="rounded bg-base px-2 py-0.5 text-muted border border-hairline">
+        {brand.protocols.join(' / ')}
+      </span>
+      {brand.hasCustomClient && (
+        <span class="rounded bg-emerald-950/60 px-2 py-0.5 text-emerald-300 border border-emerald-800/60">
+          自研客户端
+        </span>
+      )}
+    </div>
+
+    <!-- Summary -->
+    <p class="text-xs text-muted leading-relaxed line-clamp-2 mb-3">
+      {brand.summary}
+    </p>
+
+    <!-- Speedtest Badge -->
+    {topSpeedNode && (
+      <div class="mb-4 rounded border border-hairline/60 bg-base/80 p-2 text-xs font-mono flex items-center justify-between">
+        <span class="text-muted flex items-center gap-1">
+          <span class="size-1.5 rounded-full bg-emerald-400"></span>
+          实测 ({topSpeedNode.region}):
+        </span>
+        <span class="text-fg font-semibold">
+          {topSpeedNode.latency} / <span class="text-accent">{topSpeedNode.download}</span>
+        </span>
+      </div>
+    )}
+
+    <!-- Tags -->
+    <div class="flex flex-wrap gap-1 mb-4">
+      {brand.tags.map(tag => (
+        <span class="rounded bg-base px-1.5 py-0.5 text-[10px] text-muted">
+          #{tag}
+        </span>
+      ))}
+    </div>
+  </div>
+
+  <!-- Bottom CTA buttons -->
+  <div class="flex items-center gap-2 pt-3 border-t border-hairline/60 font-mono text-xs">
+    <a
+      href={`/brands/${brand.slug}`}
+      class="flex-1 rounded border border-outline bg-base py-1.5 text-center text-fg transition-colors hover:border-accent hover:text-accent font-medium flex items-center justify-center gap-1"
+    >
+      <span>深度实测报告</span>
+      {brand.proofImages?.speedtest && <span class="text-[10px] text-emerald-400">📸</span>}
+    </a>
+    <a
+      href={`/go/${brand.slug}`}
+      target="_blank"
+      rel="nofollow sponsored noopener"
+      class="rounded bg-accent/90 px-3 py-1.5 text-center font-bold text-on-accent transition-opacity hover:opacity-100"
+    >
+      直达 →
+    </a>
+  </div>
+</article>

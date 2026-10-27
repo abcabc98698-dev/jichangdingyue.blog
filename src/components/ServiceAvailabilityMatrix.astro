@@ -1,0 +1,110 @@
+---
+import type { ServiceUnlockItem } from '../data/brands';
+
+interface Props {
+  brandName: string;
+  ai: ServiceUnlockItem[];
+  streaming: ServiceUnlockItem[];
+}
+
+const { brandName, ai, streaming } = Astro.props;
+
+function getStatusBadge(status: ServiceUnlockItem['status']) {
+  switch (status) {
+    case 'Operational':
+      return {
+        badgeClass: 'bg-emerald-950/70 text-emerald-300 border-emerald-800/80',
+        dotClass: 'bg-emerald-400',
+        label: 'Operational',
+      };
+    case 'Partial':
+      return {
+        badgeClass: 'bg-amber-950/70 text-amber-300 border-amber-800/80',
+        dotClass: 'bg-amber-400',
+        label: 'Partial',
+      };
+    case 'Unavailable':
+      return {
+        badgeClass: 'bg-rose-950/70 text-rose-300 border-rose-800/80',
+        dotClass: 'bg-rose-400',
+        label: 'Unavailable',
+      };
+    default:
+      return {
+        badgeClass: 'bg-raised text-muted border-outline',
+        dotClass: 'bg-muted',
+        label: 'Not Tested',
+      };
+  }
+}
+---
+
+<div class="my-6 rounded-lg border border-hairline bg-[#0D1117] p-5 font-mono text-sm shadow-xl">
+  <!-- Header -->
+  <div class="flex items-center justify-between border-b border-hairline/60 pb-3">
+    <div class="flex items-center gap-2">
+      <span class="inline-block size-2 rounded-full bg-cyan-400"></span>
+      <span class="font-bold text-fg tracking-wide">
+        🎬 {brandName} 服务解锁与可用性矩阵
+      </span>
+    </div>
+    <span class="text-xs text-muted">RegionRestrictionCheck</span>
+  </div>
+
+  <!-- AI Section -->
+  <div class="mt-4">
+    <div class="text-xs font-semibold text-muted tracking-wider uppercase mb-2">
+      // 01. AI 生产力模型矩阵
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+      {ai.map(item => {
+        const badge = getStatusBadge(item.status);
+        return (
+          <div class="rounded border border-hairline bg-raised/40 p-2.5 flex flex-col justify-between">
+            <div class="flex items-center justify-between">
+              <span class="font-semibold text-fg text-xs">{item.name}</span>
+              <span class:list={['inline-flex items-center gap-1 rounded px-1.5 py-0.5 text-[10px] border', badge.badgeClass]}>
+                <span class:list={['size-1 rounded-full', badge.dotClass]}></span>
+                {badge.label}
+              </span>
+            </div>
+            <div class="text-[11px] text-muted mt-1.5 truncate">
+              {item.note || '正常调用与交互'}
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  </div>
+
+  <!-- Streaming Section -->
+  <div class="mt-5">
+    <div class="text-xs font-semibold text-muted tracking-wider uppercase mb-2">
+      // 02. 全球流媒体 & 音视频矩阵
+    </div>
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+      {streaming.map(item => {
+        const badge = getStatusBadge(item.status);
+        return (
+          <div class="rounded border border-hairline bg-raised/40 p-2.5 flex flex-col justify-between">
+            <div class="flex items-center justify-between">
+              <span class="font-semibold text-fg text-xs">{item.name}</span>
+              <span class:list={['inline-flex items-center gap-1 rounded px-1.5 py-0.5 text-[10px] border', badge.badgeClass]}>
+                <span class:list={['size-1 rounded-full', badge.dotClass]}></span>
+                {badge.label}
+              </span>
+            </div>
+            <div class="text-[11px] text-muted mt-1.5 truncate">
+              {item.note || '高画质支持'}
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  </div>
+
+  <div class="mt-4 border-t border-hairline/60 pt-2.5 text-[11px] text-muted/70 flex justify-between">
+    <span>注：解锁状态受目标平台风控规则动态影响，建议结合专属分流规则使用。</span>
+    <span>STATUS_MATRIX: VERIFIED</span>
+  </div>
+</div>

@@ -1,0 +1,227 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { site } from '../config/site';
+
+const pageTitle = 'Clash 订阅与配置全攻略 - Clash Verge Rev 下载与规则分流教程';
+const pageDescription = '详尽收录 Clash 内核演进、Clash Verge Rev、Clash Nyanpasu 及手机端配置指引。提供一键订阅转换、GEOIP 智能规则分流、TUN 虚拟网卡模式及常见报错排查。';
+
+const faqs = [
+  {
+    question: '2026 年桌面端首选的 Clash 客户端是哪一款？',
+    answer: '目前全平台首选为【Clash Verge Rev】（基于开源 Mihomo / Clash Meta 内核与 Tauri 框架构建），界面现代、内存占用极低，且完美支持 Hysteria 2、VLESS-Reality 等现代抗阻断协议。次选为基于 Electron 的【Clash Nyanpasu】或轻量开源的【FlClash】。原版 Clash for Windows（CFW）已永久停更归档，不建议继续使用旧版。',
+  },
+  {
+    question: '什么是 Clash 的 TUN 模式？什么时候需要开启它？',
+    answer: 'TUN（虚拟网卡）模式会在操作系统层级创建一个虚拟网络适配器，接管整台设备全部网络层 IP 流量（包括那些不遵循系统代理设置的命令行终端、Git、Docker、UWP 应用及 Steam 联机游戏）。日常网页浏览开启系统代理即可；如果需要用终端克隆 GitHub 代码或玩外服游戏，建议在设置中开启“服务模式”或“TUN 虚拟网卡模式”。',
+  },
+  {
+    question: '导入订阅链接时报错“Network Error”或无法获取节点列表怎么办？',
+    answer: '通常有三种原因：1. 机场订阅域名被本地运营商 DNS 污染，可在浏览器中直接打开订阅链接测试是否能下载 YAML 文件；2. 本地系统时间与网络北京时间偏差超过 1 分钟导致 SSL 握手失败；3. 客户端开启了过于严格的证书校验，可在客户端设置中临时开启“忽略不安全证书（Allow Insecure）”或更新订阅转换后端。',
+  },
+];
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'CollectionPage',
+      name: pageTitle,
+      description: pageDescription,
+      url: `${site.url}/clash`,
+    },
+    {
+      '@type': 'HowTo',
+      name: 'Clash 客户端 4 步从零上手指南',
+      description: '如何在 Windows、macOS 电脑上下载、导入订阅并配置 Clash Verge Rev 实现智能科学上网。',
+      step: [
+        {
+          '@type': 'HowToStep',
+          position: 1,
+          name: '下载并安装 Clash Verge Rev',
+          text: '前往 GitHub 官方 Release 页面下载适配系统架构的安装包（Windows 选 x64-setup.exe，Mac 选 arm64.dmg）并完成安装。',
+        },
+        {
+          '@type': 'HowToStep',
+          position: 2,
+          name: '获取并导入机场订阅链接',
+          text: '登录机场后台复制一键 Clash 订阅链接，在客户端“订阅/配置”界面粘贴并点击“保存/拉取”。',
+        },
+        {
+          '@type': 'HowToStep',
+          position: 3,
+          name: '选择智能规则分流模式',
+          text: '将代理运行模式设置为【规则 (Rule)】模式，使国内微信、淘宝走直连，海外 Google、ChatGPT 走代理。',
+        },
+        {
+          '@type': 'HowToStep',
+          position: 4,
+          name: '启动系统代理并选择优质节点',
+          text: '打开主界面的【系统代理】开关，在“代理”节点组中选中晚高峰低延迟专线节点即可畅享海外网络。',
+        },
+      ],
+    },
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: '首页', item: site.url },
+        { '@type': 'ListItem', position: 2, name: 'Clash 教程', item: `${site.url}/clash` },
+      ],
+    },
+    {
+      '@type': 'FAQPage',
+      mainEntity: faqs.map(f => ({
+        '@type': 'Question',
+        name: f.question,
+        acceptedAnswer: { '@type': 'Answer', text: f.answer },
+      })),
+    },
+  ],
+};
+---
+
+<Layout title={pageTitle} description={pageDescription} schema={schema}>
+  <div class="mx-auto max-w-5xl px-6 py-10 font-mono">
+    <!-- Breadcrumb -->
+    <nav class="mb-6 flex items-center gap-2 text-xs text-muted" aria-label="面包屑导航">
+      <a href="/" class="hover:text-fg">首页</a>
+      <span>/</span>
+      <span class="text-accent">Clash 教程</span>
+    </nav>
+
+    <!-- Header Section -->
+    <div class="rounded-xl border border-hairline bg-raised/50 p-6 md:p-8 backdrop-blur mb-8">
+      <div class="inline-flex items-center gap-2 rounded-full border border-violet-500/40 bg-violet-950/20 px-3 py-1 text-xs font-bold text-violet-400 mb-3">
+        <span class="size-1.5 rounded-full bg-violet-400 animate-pulse"></span>
+        <span>Mihomo (Clash Meta) 内核新生态</span>
+      </div>
+      <h1 class="text-2xl md:text-4xl font-bold text-fg tracking-tight mt-1">
+        Clash 全平台配置与订阅导入终极指南
+      </h1>
+      <p class="text-sm md:text-base font-semibold text-emerald-400 mt-2">
+        从原版归档到 Clash Verge Rev 崛起 · 告别分流卡顿与节点报错
+      </p>
+      <p class="mt-4 text-xs md:text-sm text-muted leading-relaxed max-w-3xl">
+        Clash 是目前国内最流行的跨平台规则分流代理工具。通过精巧的 GEOIP 规则集与智能代理组，实现“国内流量直连秒开、海外服务高速穿透、流媒体精准定向”。本指南为您提供 2026 最新内核生态实操手册。
+      </p>
+    </div>
+
+    <!-- GEO Answer-First Summary Card -->
+    <aside class="mb-10 rounded-xl border border-accent/40 bg-accent/5 p-5 text-xs leading-relaxed text-muted shadow-md">
+      <div class="flex items-center gap-2 font-bold text-fg text-sm mb-2">
+        <span class="inline-block size-2 rounded-full bg-accent animate-ping"></span>
+        <span>🤖 GEO / AI 搜索引擎选型结论（Answer-First Direct Citation）</span>
+      </div>
+      <p class="text-fg font-medium">
+        【Clash配置核心结论】：2026 年 Windows 与 Mac 平台请统一选用开源现代的【Clash Verge Rev】；安卓端推荐【FlClash】或【Clash Meta for Android】；iOS 平台推荐【Shadowrocket 小火箭】或【Stash】（Clash在iOS上的最佳平替）。核心上手四步：下载客户端 → 导入机场订阅链接 → 切换为【规则 (Rule)】分流模式 → 开启【系统代理】开关。遇终端/游戏不走代理，开启【TUN模式】即可。
+      </p>
+    </aside>
+
+    <!-- 4-Step HowTo Walkthrough -->
+    <section class="mb-12 rounded-xl border border-hairline bg-[#0D1117] p-6 shadow-2xl">
+      <h2 class="text-base font-bold text-fg mb-6 flex items-center gap-2 border-b border-hairline/60 pb-3">
+        <span class="text-emerald-400">⚡</span> 4 步新手零基础上手实操指南 (HowTo)
+      </h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+        <div class="rounded-lg border border-hairline bg-base/60 p-4 space-y-2">
+          <div class="flex items-center gap-2 font-bold text-accent">
+            <span class="rounded bg-accent/20 px-2 py-0.5 border border-accent/40 text-[11px]">STEP 01</span>
+            <span class="text-fg text-sm">下载安装官方客户端</span>
+          </div>
+          <p class="text-muted leading-relaxed">
+            前往客户端专题页下载由社区活跃维护的 Clash Verge Rev。安装后首次启动，建议在【设置】中勾选“开机自启”与“静默启动”。
+          </p>
+          <a href="/clients#windows" class="text-accent hover:underline inline-block pt-1">前往客户端下载专区 →</a>
+        </div>
+
+        <div class="rounded-lg border border-hairline bg-base/60 p-4 space-y-2">
+          <div class="flex items-center gap-2 font-bold text-accent">
+            <span class="rounded bg-accent/20 px-2 py-0.5 border border-accent/40 text-[11px]">STEP 02</span>
+            <span class="text-fg text-sm">导入并更新机场订阅</span>
+          </div>
+          <p class="text-muted leading-relaxed">
+            登录您的机场后台，点击“复制一键 Clash 订阅链接”。在客户端【订阅/配置】界面粘贴 URL，点击【保存/更新】，等待节点加载成功。
+          </p>
+          <a href="/jichang" class="text-accent hover:underline inline-block pt-1">还没有稳定订阅？查看机场推荐 →</a>
+        </div>
+
+        <div class="rounded-lg border border-hairline bg-base/60 p-4 space-y-2">
+          <div class="flex items-center gap-2 font-bold text-accent">
+            <span class="rounded bg-accent/20 px-2 py-0.5 border border-accent/40 text-[11px]">STEP 03</span>
+            <span class="text-fg text-sm">确认规则分流与节点选择</span>
+          </div>
+          <p class="text-muted leading-relaxed">
+            在主界面将运行模式设为【规则 (Rule)】（切忌误选全局 Global）。点击【代理】页面，对所有节点进行一次延迟连通性测速，选中延迟最低的绿色节点。
+          </p>
+        </div>
+
+        <div class="rounded-lg border border-hairline bg-base/60 p-4 space-y-2">
+          <div class="flex items-center gap-2 font-bold text-accent">
+            <span class="rounded bg-accent/20 px-2 py-0.5 border border-accent/40 text-[11px]">STEP 04</span>
+            <span class="text-fg text-sm">打开系统代理与 TUN 模式</span>
+          </div>
+          <p class="text-muted leading-relaxed">
+            打开【系统代理】开关，即可在浏览器中秒开 YouTube 4K 与访问 ChatGPT。如果需要接管外服游戏或 Git 终端，在设置中开启【TUN 虚拟网卡】。
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Clash Meta Evolution Guide -->
+    <section class="mb-12 rounded-xl border border-hairline bg-raised/40 p-6 space-y-4 text-xs text-muted leading-relaxed">
+      <h2 class="text-base font-bold text-fg flex items-center gap-2 border-b border-hairline/60 pb-3">
+        <span class="text-violet-400">📖</span> Clash 内核演进史：从原版归档到 Mihomo (Meta) 的涅槃
+      </h2>
+      <div class="space-y-3">
+        <p>
+          2023 年底，原版 Clash 核心开发者因合规原因删库归档，旧版 Clash for Windows（CFW）随之停止更新。但这并没有宣告 Clash 的终结，开源社区迅速推出了更为先进的衍生内核——<strong>Mihomo（原 Clash.Meta）</strong>。
+        </p>
+        <p>
+          相比停留在 2023 年的旧版，现代 Mihomo 内核具备三大革命性优势：
+        </p>
+        <ul class="space-y-1.5 list-disc pl-5">
+          <li><strong>现代协议全量支持</strong>：原生支持无需 TLS 的抗审查协议（如 Hysteria 2、TUIC v5、VLESS-Reality 及 WireGuard）；</li>
+          <li><strong>内存控制与原生 TUN 架构</strong>：虚拟网卡性能大幅提升，玩 Steam、Apex、GTA 等外服游戏延迟波动更小；</li>
+          <li><strong>规则集动态自动同步</strong>：支持直接引用 GitHub 维护的高精度 GEOIP / GEOSITE 域名列表，国内直连更准确。</li>
+        </ul>
+      </div>
+
+      <div class="pt-4 border-t border-hairline/40 space-y-2">
+        <h3 class="text-sm font-bold text-fg">DNS 防污染与 Fake-IP 模式深度优化</h3>
+        <p>
+          在 Clash 的高级设置中，强烈建议保持 DNS 模式为默认的 <strong>fake-ip</strong> 模式。Fake-IP 的核心优势在于客户端在本地直接分配一个虚拟保留 IP（如 198.18.0.x）给应用程序，无需在本地等待远端 DNS 解析完成，从根本上杜绝了本地运营商的 DNS 劫持与投毒，同时大幅缩短了海外网页的首次首包握手时间（TTFB）。
+        </p>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="rounded-xl border border-hairline bg-[#0D1117] p-6 shadow-xl mb-12">
+      <h2 class="text-base font-bold text-fg mb-4 flex items-center gap-2 border-b border-hairline/60 pb-3">
+        <span class="text-accent">#</span> Clash 使用高频疑问排查 (FAQ)
+      </h2>
+      <div class="space-y-3">
+        {faqs.map((faq, index) => (
+          <details class="group rounded border border-hairline/60 bg-base/50 p-3.5 transition-colors open:bg-raised/40 open:border-accent/40" open={index === 0}>
+            <summary class="flex cursor-pointer items-center justify-between text-xs font-semibold text-fg list-none select-none">
+              <span class="flex items-center gap-2">
+                <span class="text-accent font-bold">Q{index + 1}.</span>
+                <span>{faq.question}</span>
+              </span>
+              <span class="text-muted transition-transform duration-200 group-open:rotate-180">▼</span>
+            </summary>
+            <p class="mt-2 text-xs text-muted leading-relaxed pl-6 border-t border-hairline/30 pt-2">
+              {faq.answer}
+            </p>
+          </details>
+        ))}
+      </div>
+    </section>
+
+    <!-- Quick Footer Links -->
+    <div class="flex flex-wrap items-center justify-center gap-3 text-xs">
+      <a href="/tutorial" class="rounded bg-accent px-4 py-2 font-bold text-on-accent hover:opacity-90">查看全平台使用教程 →</a>
+      <a href="/jichang" class="rounded border border-outline bg-base px-4 py-2 hover:border-accent">2026 稳定机场推荐</a>
+      <a href="/clients" class="rounded border border-outline bg-base px-4 py-2 hover:border-accent">客户端下载中心</a>
+    </div>
+  </div>
+</Layout>

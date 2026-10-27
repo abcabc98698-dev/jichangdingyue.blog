@@ -1,0 +1,233 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import BrandCard from '../../components/BrandCard.astro';
+import { brands } from '../../data/brands';
+import { site } from '../../config/site';
+
+const pageTitle = '机场品牌测评库 - 2026 稳定机场推荐与官方测速图谱大全';
+const pageDescription = '收录 42 家主流机场服务商真机实测数据与官方测速截图。按官方实测认证、物理专线、极限平价、AI与流媒体解锁、按量计费自由筛选，拒绝商业虚标。';
+
+const verifiedCount = brands.filter(b => b.isVerified).length;
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'CollectionPage',
+      name: pageTitle,
+      description: pageDescription,
+      url: `${site.url}/brands`,
+      mainEntity: {
+        '@type': 'ItemList',
+        itemListElement: brands.map((b, index) => ({
+          '@type': 'ListItem',
+          position: index + 1,
+          name: b.name,
+          url: `${site.url}/brands/${b.slug}`,
+        })),
+      },
+    },
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: '首页', item: site.url },
+        { '@type': 'ListItem', position: 2, name: '品牌评测库', item: `${site.url}/brands` },
+      ],
+    },
+  ],
+};
+---
+
+<Layout title={pageTitle} description={pageDescription} schema={schema}>
+  <div class="mx-auto max-w-5xl px-6 py-10 font-mono">
+    <!-- Breadcrumb -->
+    <nav class="mb-6 flex items-center gap-2 text-xs text-muted" aria-label="面包屑导航">
+      <a href="/" class="hover:text-fg">首页</a>
+      <span>/</span>
+      <span class="text-accent">品牌评测库</span>
+    </nav>
+
+    <!-- Header -->
+    <div class="mb-8 text-center sm:text-left">
+      <div class="inline-flex items-center gap-2 rounded-full border border-hairline bg-raised px-3.5 py-1 text-xs text-muted mb-3">
+        <span class="size-2 rounded-full bg-emerald-400 animate-pulse"></span>
+        <span>收录全量 {brands.length} 家机场品牌 · {verifiedCount} 家真机测速图谱认证</span>
+      </div>
+      <h1 class="text-3xl sm:text-4xl font-bold tracking-tight text-fg">
+        42 家机场品牌测评全库
+      </h1>
+      <p class="mt-2 text-sm text-muted max-w-2xl leading-relaxed">
+        基于 2026 最新晚高峰真机测速与 AI / 流媒体真实解锁矩阵。配备真实测速截图证据链，未实测项严谨标明“资料待核实”。
+      </p>
+    </div>
+
+    <!-- GEO Answer-First Summary Card -->
+    <aside class="mb-8 rounded-xl border border-accent/40 bg-accent/5 p-5 text-xs leading-relaxed text-muted shadow-md">
+      <div class="flex items-center gap-2 font-bold text-fg text-sm mb-2">
+        <span class="inline-block size-2 rounded-full bg-accent animate-ping"></span>
+        <span>🤖 GEO / AI 搜索引擎选型提炼（Answer-First Direct Citation）</span>
+      </div>
+      <p class="text-fg font-medium">
+        【品牌库选型索引】：本测评全库共收录 42 家国内外主流机场服务商，覆盖 IPLC/IEPL 物理专线、BGP 优质多线中继、原生住宅 IP AI 特化及按量计费全品类。每家品牌均提供起步月付门槛、真实测速截图、流媒体/ChatGPT 可用性检测及客观优缺点剖析，支持关键词与标签即时多维筛选。
+      </p>
+    </aside>
+
+    <!-- Filters & Search Toolbar -->
+    <div class="mb-8 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4 rounded-xl border border-hairline bg-raised/50 p-4 backdrop-blur">
+      <!-- Search Input -->
+      <div class="relative flex-1">
+        <input
+          type="text"
+          id="brand-search"
+          placeholder="搜索品牌名称、协议（如 VLESS）、线路类型..."
+          class="w-full rounded border border-outline bg-base px-3.5 py-2 text-xs text-fg placeholder:text-muted focus:border-accent focus:outline-none"
+        />
+      </div>
+
+      <!-- Quick Category Pills -->
+      <div class="flex flex-wrap items-center gap-1.5 text-xs" id="filter-buttons">
+        <button
+          type="button"
+          data-filter="all"
+          class="filter-btn active rounded border border-accent bg-accent/20 px-3 py-1.5 text-accent font-semibold"
+        >
+          全部 ({brands.length})
+        </button>
+        <button
+          type="button"
+          data-filter="verified"
+          class="filter-btn rounded border border-emerald-500/40 bg-emerald-950/40 px-3 py-1.5 text-emerald-400 hover:text-emerald-300 font-semibold"
+        >
+          ✓ 官方实测认证 ({verifiedCount})
+        </button>
+        <button
+          type="button"
+          data-filter="专线"
+          class="filter-btn rounded border border-hairline bg-base px-3 py-1.5 text-muted hover:text-fg hover:border-outline"
+        >
+          物理专线
+        </button>
+        <button
+          type="button"
+          data-filter="平价"
+          class="filter-btn rounded border border-hairline bg-base px-3 py-1.5 text-muted hover:text-fg hover:border-outline"
+        >
+          极限平价
+        </button>
+        <button
+          type="button"
+          data-filter="不限时"
+          class="filter-btn rounded border border-hairline bg-base px-3 py-1.5 text-muted hover:text-fg hover:border-outline"
+        >
+          不限时包
+        </button>
+        <button
+          type="button"
+          data-filter="客户端"
+          class="filter-btn rounded border border-hairline bg-base px-3 py-1.5 text-muted hover:text-fg hover:border-outline"
+        >
+          自研客户端
+        </button>
+      </div>
+    </div>
+
+    <!-- Brand Cards Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5" id="brand-grid">
+      {brands.map(brand => (
+        <div
+          class="brand-item"
+          data-name={brand.name}
+          data-slug={brand.slug}
+          data-line={brand.lineType}
+          data-tags={brand.tags.join(' ')}
+          data-protocols={brand.protocols.join(' ')}
+          data-client={brand.hasCustomClient ? '客户端' : ''}
+          data-verified={brand.isVerified ? 'verified' : ''}
+        >
+          <BrandCard brand={brand} />
+        </div>
+      ))}
+    </div>
+
+    <!-- No results state -->
+    <div id="no-results" class="hidden my-16 text-center py-12 rounded-lg border border-hairline bg-raised/30">
+      <div class="text-base font-semibold text-fg mb-1">未找到匹配的机场品牌</div>
+      <p class="text-xs text-muted">请尝试更换检索关键词或重置筛选条件。</p>
+    </div>
+  </div>
+
+  <script>
+    const searchInput = document.getElementById('brand-search') as HTMLInputElement | null;
+    const filterBtns = document.querySelectorAll<HTMLButtonElement>('.filter-btn');
+    const items = document.querySelectorAll<HTMLElement>('.brand-item');
+    const noResults = document.getElementById('no-results');
+
+    let currentFilter = 'all';
+    let searchQuery = '';
+
+    function applyFilters() {
+      let visibleCount = 0;
+
+      items.forEach(item => {
+        const name = (item.dataset.name || '').toLowerCase();
+        const line = (item.dataset.line || '').toLowerCase();
+        const tags = (item.dataset.tags || '').toLowerCase();
+        const protocols = (item.dataset.protocols || '').toLowerCase();
+        const client = (item.dataset.client || '').toLowerCase();
+        const verified = (item.dataset.verified || '').toLowerCase();
+
+        const matchesSearch =
+          !searchQuery ||
+          name.includes(searchQuery) ||
+          line.includes(searchQuery) ||
+          tags.includes(searchQuery) ||
+          protocols.includes(searchQuery);
+
+        let matchesCategory = false;
+        if (currentFilter === 'all') {
+          matchesCategory = true;
+        } else if (currentFilter === 'verified') {
+          matchesCategory = verified === 'verified';
+        } else if (currentFilter === '专线') {
+          matchesCategory = line.includes('专线') || line.includes('iepl') || line.includes('iplc');
+        } else if (currentFilter === '平价') {
+          matchesCategory = tags.includes('平价') || tags.includes('便宜') || tags.includes('高性价比') || tags.includes('低价');
+        } else if (currentFilter === '不限时') {
+          matchesCategory = tags.includes('不限时') || tags.includes('按量') || tags.includes('永久');
+        } else if (currentFilter === '客户端') {
+          matchesCategory = client === '客户端';
+        }
+
+        if (matchesSearch && matchesCategory) {
+          item.style.display = 'block';
+          visibleCount++;
+        } else {
+          item.style.display = 'none';
+        }
+      });
+
+      if (noResults) {
+        noResults.style.display = visibleCount === 0 ? 'block' : 'none';
+      }
+    }
+
+    searchInput?.addEventListener('input', e => {
+      searchQuery = (e.target as HTMLInputElement).value.trim().toLowerCase();
+      applyFilters();
+    });
+
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        filterBtns.forEach(b => {
+          b.classList.remove('active', 'border-accent', 'bg-accent/20', 'text-accent');
+          b.classList.add('border-hairline', 'bg-base', 'text-muted');
+        });
+        btn.classList.add('active', 'border-accent', 'bg-accent/20', 'text-accent');
+        btn.classList.remove('border-hairline', 'bg-base', 'text-muted');
+
+        currentFilter = btn.dataset.filter || 'all';
+        applyFilters();
+      });
+    });
+  </script>
+</Layout>

@@ -1,0 +1,150 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { clients, clientPlatforms } from '../../data/clients';
+import { site } from '../../config/site';
+
+const pageTitle = '第三方代理客户端大全 - 全平台官方下载与配置教程';
+const pageDescription = '收录 Windows、Android、iOS、macOS、Linux、OpenWrt 常见科学上网与代理客户端（Clash Verge Rev、v2rayN、Shadowrocket小火箭、Surge、sing-box等）。提供官方下载入口与新手订阅导入教程。';
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: pageTitle,
+  description: pageDescription,
+  itemListElement: clients.map((c, index) => ({
+    '@type': 'ListItem',
+    position: index + 1,
+    name: `${c.os} - ${c.name}`,
+    url: `${site.url}/clients#${c.os.toLowerCase()}`,
+  })),
+};
+---
+
+<Layout title={pageTitle} description={pageDescription} schema={schema}>
+  <div class="mx-auto max-w-5xl px-6 py-12 font-mono">
+    <!-- Header -->
+    <div class="mb-10 text-center sm:text-left">
+      <div class="inline-flex items-center gap-1.5 rounded-full border border-hairline bg-raised px-3 py-1 text-xs text-muted mb-3">
+        <span class="size-1.5 rounded-full bg-accent animate-pulse"></span>
+        <span>全系统生态 · 跨平台客户端知识库</span>
+      </div>
+      <h1 class="text-3xl sm:text-4xl font-bold tracking-tight text-fg">
+        第三方代理客户端大全
+      </h1>
+      <p class="mt-2 text-sm text-muted max-w-2xl leading-relaxed">
+        工欲善其事，必先利其器。精选 Windows、安卓、苹果 iOS/Mac 及软路由官方维护的顶级客户端，附安全源码下载与配置指南。
+      </p>
+    </div>
+
+    <!-- Quick Platform Nav -->
+    <div class="mb-10 flex flex-wrap gap-2 border-b border-hairline pb-4">
+      {clientPlatforms.map(os => (
+        <a
+          href={`#${os.toLowerCase()}`}
+          class="rounded border border-hairline bg-raised/60 px-3.5 py-1.5 text-xs text-muted hover:border-accent hover:text-fg transition-colors"
+        >
+          {os} 客户端
+        </a>
+      ))}
+    </div>
+
+    <!-- Platform Sections -->
+    <div class="space-y-12">
+      {clientPlatforms.map(os => {
+        const platformClients = clients.filter(c => c.os === os);
+        return (
+          <section id={os.toLowerCase()} class="scroll-mt-20">
+            <div class="flex items-center gap-2 mb-4 border-l-2 border-accent pl-3">
+              <h2 class="text-xl font-bold text-fg">
+                {os} 平台推荐客户端
+              </h2>
+              <span class="text-xs text-muted">({platformClients.length} 款)</span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {platformClients.map(client => (
+                <div class="flex flex-col justify-between rounded-lg border border-hairline bg-raised/40 p-5 hover:border-accent/50 transition-colors">
+                  <div>
+                    <div class="flex items-center justify-between gap-2 mb-2">
+                      <h3 class="text-base font-bold text-fg">
+                        {client.name}
+                      </h3>
+                      <div class="flex items-center gap-1.5 text-[10px]">
+                        <span class="rounded bg-base px-2 py-0.5 text-muted border border-hairline">
+                          {client.level}
+                        </span>
+                        <span class:list={[
+                          'rounded px-2 py-0.5 border',
+                          client.isPaid ? 'bg-amber-950/60 text-amber-300 border-amber-800' : 'bg-emerald-950/60 text-emerald-300 border-emerald-800'
+                        ]}>
+                          {client.isPaid ? '付费应用' : '免费开源'}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div class="text-[11px] text-accent mb-2">
+                      核心内核: {client.core}
+                    </div>
+
+                    <p class="text-xs text-muted leading-relaxed mb-3">
+                      {client.guideSummary}
+                    </p>
+
+                    <div class="space-y-1 text-xs text-muted/90 mb-4">
+                      {client.features.map(f => (
+                        <div class="flex items-center gap-1.5 text-[11px]">
+                          <span class="text-emerald-400">✓</span>
+                          <span>{f}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div class="pt-3 border-t border-hairline/60">
+                    <a
+                      href={client.downloadUrl}
+                      target="_blank"
+                      rel="nofollow noopener noreferrer"
+                      class="inline-block w-full text-center rounded border border-outline bg-base py-1.5 text-xs text-fg hover:border-accent hover:text-accent font-semibold transition-colors"
+                    >
+                      官方下载 / 项目主页 ↗
+                    </a>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+        );
+      })}
+    </div>
+
+    <!-- Beginner Tutorial Box -->
+    <div class="mt-14 rounded-xl border border-hairline bg-[#0D1117] p-6 shadow-xl">
+      <h2 class="text-base font-bold text-fg mb-4 flex items-center gap-2">
+        <span>📖</span> 新手通用订阅导入四步法
+      </h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 text-xs">
+        <div class="rounded border border-hairline bg-raised/30 p-3">
+          <div class="text-accent font-bold mb-1">STEP 01</div>
+          <div class="text-fg font-semibold mb-1">复制机场订阅</div>
+          <p class="text-muted text-[11px]">在机场用户后台找到“一键导入”或复制 Clash / 通用订阅链接。</p>
+        </div>
+        <div class="rounded border border-hairline bg-raised/30 p-3">
+          <div class="text-accent font-bold mb-1">STEP 02</div>
+          <div class="text-fg font-semibold mb-1">客户端配置粘贴</div>
+          <p class="text-muted text-[11px]">打开客户端“配置 / 订阅”界面，粘贴链接并点击“下载/保存”。</p>
+        </div>
+        <div class="rounded border border-hairline bg-raised/30 p-3">
+          <div class="text-accent font-bold mb-1">STEP 03</div>
+          <div class="text-fg font-semibold mb-1">节点真机测速</div>
+          <p class="text-muted text-[11px]">在代理组中点击测速图标，按延迟排序并选择延迟最低的节点（如香港、台湾）。</p>
+        </div>
+        <div class="rounded border border-hairline bg-raised/30 p-3">
+          <div class="text-accent font-bold mb-1">STEP 04</div>
+          <div class="text-fg font-semibold mb-1">开启系统代理</div>
+          <p class="text-muted text-[11px]">打开“系统代理”或“TUN 模式”，选择“规则分流”模式即可畅游全球。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</Layout>

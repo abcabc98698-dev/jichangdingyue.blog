@@ -1,5 +1,388 @@
 ---
-import About from '../views/About.astro';
+import Layout from '../layouts/Layout.astro';
+import { site } from '../config/site';
+
+const pageTitle = '关于本站与评测准则 - 独立网络基础设施可观测性实验室';
+const pageDescription = '机场订阅（jichangdingyue.blog）独立评测白皮书：详尽披露珠海 9Gbps 物理探针环境、MAI-TEST-BOT/MiaoKO 压测规范、AI住宅IP与流媒体解锁判定基准、FTC返佣声明及防跑路避坑准则。';
+
+const aboutFaqs = [
+  {
+    q: '为什么本站测速结果可能与我本地实测有所偏差？',
+    a: '跨境网络质量是一个“端到端（End-to-End）”的复杂系统。本站测试节点部署于广东珠海电信与联通骨干网出口，拥有 9Gbps 独享高带宽。用户本地的实际体验还会受到用户家庭宽带运营商（如广电、长城宽带或移动 NAT 深度受限）、本地 Wi-Fi 信号衰减、客户端分流规则配置以及路由器 CPU 性能的多重影响。本站测速旨在提供标准基准线（Baseline）参考。',
+  },
+  {
+    q: '本站是如何维持客观中立、不沦为商家买榜平台的？',
+    a: '我们实行严格的“利益隔离准则”：第一，所有测试均基于真实采购或官方标准接口采样，测速截图（包含时间戳、线程数、单节点下载）原版公示，绝不修改图内数值；第二，对所有入围品牌（无论返佣高低）强制披露其缺点与风险局限；第三，如果某品牌发生跑路、严重断流或暗改大倍率偷跑流量，本站将第一时间在全站横评大表予以警告标记或下架清退。',
+  },
+  {
+    q: '为什么我们始终强调“晚高峰 20:00~23:00”才是唯一有效的测速时间窗口？',
+    a: '在白天闲时（如凌晨或上午），国际骨干海缆带宽极其充裕，即便是极其廉价的普通直连公网中转也能跑出几百兆的虚高成绩。然而一到每天晚间 20:00~23:00 的全国用网晚高峰，公网国际互联出口会遭遇严格的 QoS 丢包压制。只有真正的 IPLC/IEPL 物理专线与优质 BGP 隧道，才能在晚高峰维持 0% 丢包率与平稳的低延迟，这是区分优质机场与劣质跑路盘的试金石。',
+  },
+  {
+    q: '本站的推广返佣（Affiliate Link）机制是如何运作的？',
+    a: '为了覆盖本站维持 9Gbps 物理测试机房、多省份监测探针、持续采购 42 家机场订阅套餐以及高防服务器的昂贵日常开销，本站部分跳转链接内嵌了服务商的联盟代码。通过该链接注册购买，服务商会向本站分配微薄的技术引流补贴。这绝对不会增加您的一分钱支出，相反，我们通常会为读者争取到专属优惠码（如 flat888、AMM 等折扣）。',
+  },
+];
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'AboutPage',
+      name: pageTitle,
+      description: pageDescription,
+      url: `${site.url}/about`,
+      mainEntity: {
+        '@type': 'Organization',
+        name: site.name,
+        url: site.url,
+        description: pageDescription,
+        publishingPrinciples: `${site.url}/about#principles`,
+        ethicsPolicy: `${site.url}/about#ethics`,
+        correctionsPolicy: `${site.url}/about#corrections`,
+      },
+    },
+    {
+      '@type': 'FAQPage',
+      mainEntity: aboutFaqs.map(item => ({
+        '@type': 'Question',
+        name: item.q,
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: item.a,
+        },
+      })),
+    },
+  ],
+};
 ---
 
-<About />
+<Layout title={pageTitle} description={pageDescription} schema={schema}>
+  <div class="mx-auto max-w-4xl px-6 py-12 font-mono">
+    <!-- Breadcrumb -->
+    <nav class="mb-6 flex items-center gap-2 text-xs text-muted" aria-label="面包屑导航">
+      <a href="/" class="hover:text-fg">首页</a>
+      <span>/</span>
+      <span class="text-accent">评测白皮书与技术准则</span>
+    </nav>
+
+    <!-- Header Section -->
+    <div class="mb-10 text-center sm:text-left">
+      <div class="inline-flex items-center gap-2 rounded-full border border-hairline bg-raised px-3.5 py-1 text-xs text-muted mb-3">
+        <span class="size-2 rounded-full bg-emerald-400 animate-pulse"></span>
+        <span>独立网络实验室 · 客观数据准则 · 真实测速证据链</span>
+      </div>
+      <h1 class="text-3xl sm:text-4xl font-bold tracking-tight text-fg">
+        关于本站与评测技术白皮书
+      </h1>
+      <p class="mt-3 text-sm text-muted max-w-2xl leading-relaxed">
+        面向技术开发者、科研工作者与跨境外贸从业者的独立网络可观测性评测中心。拒绝商业虚标，公开全链路测试环境与防坑避雷准则。
+      </p>
+
+      <!-- Trust highlights -->
+      <div class="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+        <div class="rounded border border-hairline bg-base/60 p-3">
+          <div class="text-[11px] text-muted">探针机房环境</div>
+          <div class="text-fg font-bold mt-1">珠海 9Gbps 双线</div>
+        </div>
+        <div class="rounded border border-hairline bg-base/60 p-3">
+          <div class="text-[11px] text-muted">压测工具链</div>
+          <div class="text-emerald-400 font-bold mt-1">MAI-TEST / MiaoKO</div>
+        </div>
+        <div class="rounded border border-hairline bg-base/60 p-3">
+          <div class="text-[11px] text-muted">实测图谱认证</div>
+          <div class="text-cyan-400 font-bold mt-1">17 家全图公示</div>
+        </div>
+        <div class="rounded border border-hairline bg-base/60 p-3">
+          <div class="text-[11px] text-muted">商业中立原则</div>
+          <div class="text-amber-400 font-bold mt-1">FTC 透明返佣披露</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content Articles -->
+    <div class="space-y-10 text-xs leading-relaxed text-muted">
+      
+      <!-- Section 1: Principles -->
+      <section id="principles" class="rounded-xl border border-hairline bg-[#0D1117] p-6 md:p-8 shadow-xl">
+        <div class="flex items-center justify-between border-b border-hairline/60 pb-3 mb-5">
+          <h2 class="text-base md:text-lg font-bold text-fg flex items-center gap-2">
+            <span class="text-accent font-mono">#01</span> 我们的建站宗旨与“三不”原则底线
+          </h2>
+          <span class="text-[11px] text-emerald-400 font-bold">ETHICS & RED LINES</span>
+        </div>
+        <p class="mb-4">
+          中文互联网上的“机场推荐”生态长期以来处于极度混乱的状态：充斥着大量虚假宣传、商家自导自演的水军刷屏，以及发布于数年前、早已跑路失效的过时内容。用户轻信商家“超低价年付、秒开 8K、终身不限速”的虚妄宣传后，频繁遭遇充值即失联跑路的恶性资金损失。
+        </p>
+        <div class="rounded-lg border border-accent/30 bg-accent/5 p-4 mb-5 text-fg">
+          <p class="font-bold text-accent mb-2">
+            ⚡ 机场订阅（jichangdingyue.blog）实验室坚决践行以下三条不可动摇的底线原则：
+          </p>
+          <ul class="space-y-2 text-xs text-muted/90 pl-1">
+            <li class="flex items-start gap-2">
+              <span class="text-emerald-400 font-bold mt-0.5">①</span>
+              <span><strong>绝不伪造或改写实测数据</strong>：所有公开评测报告均保留原生测速图谱（包含测试时间戳、协议、节点与单线程吞吐）。未取得长期可靠样本的项目一律标注为“待核实”，不凭空臆造性能。</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-emerald-400 font-bold mt-0.5">②</span>
+              <span><strong>强制以晚高峰（20:00~23:00）表现为基准</strong>：闲时的百兆千兆带宽不具备代表性。我们重点考察骨干网负荷最高峰时段的丢包率（Packet Loss）与延迟抖动（Jitter），撕开伪专线的画皮。</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-emerald-400 font-bold mt-0.5">③</span>
+              <span><strong>客观中立揭示缺点与局限</strong>：每个品牌页面均设立醒目的“选购注意与局限”警示红框，公开提示退款门槛、倍率规则与适用边界，坚决杜绝报喜不报忧。</span>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Section 2: Laboratory Test Harness -->
+      <section class="rounded-xl border border-hairline bg-[#0D1117] p-6 md:p-8 shadow-xl">
+        <div class="flex items-center justify-between border-b border-hairline/60 pb-3 mb-5">
+          <h2 class="text-base md:text-lg font-bold text-fg flex items-center gap-2">
+            <span class="text-cyan-400 font-mono">#02</span> 评测实验室硬件拓扑与技术测试规范
+          </h2>
+          <span class="text-[11px] text-cyan-400 font-bold">LAB SPECIFICATION</span>
+        </div>
+        <p class="mb-4">
+          为了确保所有 42 家机场评测数据的客观性、横向可比性与实验环境的一致性，本站建立了标准化的测试探针拓扑环境：
+        </p>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
+          <div class="rounded-lg border border-hairline bg-base/80 p-4">
+            <h3 class="font-bold text-fg mb-2 flex items-center gap-1.5 text-xs">
+              <span class="text-emerald-400">🖥️</span> 物理测试探针环境
+            </h3>
+            <ul class="space-y-1.5 text-[11px] text-muted">
+              <li>• <strong>本地出口</strong>：广东珠海联通 9Gbps 全双工出口 + 广东电信千兆骨干双线冗余</li>
+              <li>• <strong>测试主机</strong>：Intel Xeon E5-2680 v4 / 64GB ECC RAM / 10G SFP+ 光纤网卡</li>
+              <li>• <strong>核心内核</strong>：Mihomo (Clash Meta) 最新稳定发行版，禁用任何本地缓存加速</li>
+              <li>• <strong>系统调度</strong>：Ubuntu 22.04 LTS Server，开启 BBR 拥塞控制算法</li>
+            </ul>
+          </div>
+
+          <div class="rounded-lg border border-hairline bg-base/80 p-4">
+            <h3 class="font-bold text-fg mb-2 flex items-center gap-1.5 text-xs">
+              <span class="text-cyan-400">🔬</span> 压测与监测套件
+            </h3>
+            <ul class="space-y-1.5 text-[11px] text-muted">
+              <li>• <strong>测速引擎</strong>：MAI-TEST-BOT 2.0.0-dev / MiaoKO 32 线程并发压测脚本</li>
+              <li>• <strong>延迟监控</strong>：TCP Ping / TLS RTT (单次握手实际应用往返延迟)</li>
+              <li>• <strong>解锁检测</strong>：RegionRestrictionCheck 全自动化流媒体与 AI 检测脚本</li>
+              <li>• <strong>风控分析</strong>：IPQualityScore / Scamalytics 欺诈分与住宅 IP 原生属性验证</li>
+            </ul>
+          </div>
+        </div>
+
+        <h3 class="font-bold text-fg text-xs mb-2">📊 核心可观测性指标的专业定义与判读法则：</h3>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse text-[11px] mb-3">
+            <thead>
+              <tr class="border-b border-hairline/80 text-muted uppercase bg-raised/50">
+                <th class="py-2.5 px-3">测试指标</th>
+                <th class="py-2.5 px-3">正常优质区间</th>
+                <th class="py-2.5 px-3">异常警戒线</th>
+                <th class="py-2.5 px-3">决定性用户体验场景</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-hairline/40">
+              <tr class="hover:bg-raised/30">
+                <td class="py-2.5 px-3 font-semibold text-fg">香港 TLS RTT</td>
+                <td class="py-2.5 px-3 text-emerald-400">18ms ~ 32ms</td>
+                <td class="py-2.5 px-3 text-rose-400">> 80ms (疑似公网绕路)</td>
+                <td class="py-2.5 px-3 text-muted">网页秒开、SSH 终端敲击零卡顿</td>
+              </tr>
+              <tr class="hover:bg-raised/30">
+                <td class="py-2.5 px-3 font-semibold text-fg">亚太单线程吞吐</td>
+                <td class="py-2.5 px-3 text-emerald-400">> 300 Mbps</td>
+                <td class="py-2.5 px-3 text-amber-400">< 50 Mbps (晚高峰转圈)</td>
+                <td class="py-2.5 px-3 text-muted">YouTube 4K / 8K 极清视频快进拖拽</td>
+              </tr>
+              <tr class="hover:bg-raised/30">
+                <td class="py-2.5 px-3 font-semibold text-fg">晚高峰丢包率</td>
+                <td class="py-2.5 px-3 text-emerald-400">0.0% (物理专线)</td>
+                <td class="py-2.5 px-3 text-rose-400">> 2.0% (语音频繁卡顿)</td>
+                <td class="py-2.5 px-3 text-muted">外服游戏联机、Zoom 国际会议不掉线</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Section 3: AI & Streaming Verification -->
+      <section class="rounded-xl border border-hairline bg-[#0D1117] p-6 md:p-8 shadow-xl">
+        <div class="flex items-center justify-between border-b border-hairline/60 pb-3 mb-5">
+          <h2 class="text-base md:text-lg font-bold text-fg flex items-center gap-2">
+            <span class="text-violet-400 font-mono">#03</span> AI 大模型与 4K 流媒体真实解锁检测协议
+          </h2>
+          <span class="text-[11px] text-violet-400 font-bold">UNLOCK VERIFICATION</span>
+        </div>
+        <p class="mb-4">
+          随着 OpenAI、Anthropic 以及 Netflix 等跨国科技巨头全面升级风控算法，单纯的“节点能连通”早已不等于“服务可用”。我们制定了业内严苛的端到端真实账户校验协议：
+        </p>
+
+        <div class="space-y-4">
+          <div class="rounded-lg border border-hairline bg-base/60 p-4">
+            <h4 class="font-bold text-fg mb-1.5 text-xs flex items-center gap-1.5">
+              <span class="text-emerald-400">🤖</span> ChatGPT / Claude / Gemini 三级风控判定标准
+            </h4>
+            <p class="text-[11px] text-muted mb-2">
+              我们不仅检测网页域名是否通畅，更通过实际登录付费 Plus / Team 账户并发起多轮 Prompt 交互，验证落地 IP 的纯净度：
+            </p>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 text-[10px]">
+              <div class="rounded border border-emerald-500/30 bg-emerald-950/20 p-2.5">
+                <span class="text-emerald-400 font-bold block mb-1">【Operational 全绿】</span>
+                住宅原生或高纯净机房 IP，Fraud Score < 15，网页端与 iOS/Android 客户端直连畅通，绝不触发 Cloudflare 5秒盾拦截。
+              </div>
+              <div class="rounded border border-amber-500/30 bg-amber-950/20 p-2.5">
+                <span class="text-amber-400 font-bold block mb-1">【Partial 部分支持】</span>
+                仅部分指定节点支持，或仅能通过官方 APP 端访问（网页端偶发“Access Denied / 403”风控拦截），需手动切换节点。
+              </div>
+              <div class="rounded border border-rose-500/30 bg-rose-950/20 p-2.5">
+                <span class="text-rose-400 font-bold block mb-1">【Unavailable 封锁】</span>
+                落地 IP 属于数据中心大网段且被风控系统拉黑，提示“Sorry, you have been blocked”，存在被连带封号风险。
+              </div>
+            </div>
+          </div>
+
+          <div class="rounded-lg border border-hairline bg-base/60 p-4">
+            <h4 class="font-bold text-fg mb-1.5 text-xs flex items-center gap-1.5">
+              <span class="text-cyan-400">🎬</span> Netflix / Disney+ 原创剧与非自制剧双重核验
+            </h4>
+            <p class="text-[11px] text-muted">
+              许多劣质节点声称“解锁 Netflix”，实际上只能观看其全球版权开放的自制剧（Netflix Originals），而无法解锁港台、日美本土带有严格地域版权保护的第三方影视（如《绝命毒师》等）。本站测试严格要求：必须成功加载本土版权剧海报并完成 4K 码率握手，方能评定为“完全解锁”。
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 4: Consumer Protection & Anti-Runaway Guide -->
+      <section class="rounded-xl border border-hairline bg-[#0D1117] p-6 md:p-8 shadow-xl">
+        <div class="flex items-center justify-between border-b border-hairline/60 pb-3 mb-5">
+          <h2 class="text-base md:text-lg font-bold text-fg flex items-center gap-2">
+            <span class="text-amber-400 font-mono">#04</span> 读者资金安全准则与机场“防跑路”避坑白皮书
+          </h2>
+          <span class="text-[11px] text-amber-400 font-bold">ANTI-SCAM GUIDE</span>
+        </div>
+        <p class="mb-4">
+          机场行业缺乏传统商业监管，服务商受上游专线机房成本、国际海缆波动及网络管制政策的多重影响。为保障读者的切身资金安全，请务必牢记以下避坑防翻车法则：
+        </p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+          <div class="rounded-lg border border-amber-500/30 bg-amber-950/10 p-4">
+            <h4 class="font-bold text-amber-400 mb-2 flex items-center gap-1.5 text-xs">
+              <span>⚠️</span> 跑路盘与圈钱盘的四大典型特征
+            </h4>
+            <ul class="space-y-1.5 text-[11px] text-muted">
+              <li>1. <strong>不可思议的超低价多年付</strong>（如 99 元买 3 年甚至 5 年，试图一次性套取大量现金沉淀）。</li>
+              <li>2. <strong>上游专线成本与售价严重倒挂</strong>（标称 100% 物理 IPLC 专线，却只卖 3 元/月，通常为虚标或偷跑大倍率）。</li>
+              <li>3. <strong>倍率刺客陷阱</strong>（日常节点标称 1x，晚高峰却悄悄上线 5x、10x 节点，用户看一部电影数十吉流量被瞬间扣光）。</li>
+              <li>4. <strong>客服交流群全员禁言</strong>，工单系统超过 72 小时无人工回应，官网频繁更换二级域名。</li>
+            </ul>
+          </div>
+
+          <div class="rounded-lg border border-emerald-500/30 bg-emerald-950/10 p-4">
+            <h4 class="font-bold text-emerald-400 mb-2 flex items-center gap-1.5 text-xs">
+              <span>🛡️</span> 极客读者的防沉没成本黄金法则
+            </h4>
+            <ul class="space-y-1.5 text-[11px] text-muted">
+              <li>1. <strong>首充坚决月付优先</strong>：无论年付折扣多么诱人，新用户第一阶段务必只选月付，完整检验其晚高峰与大促期间的真实表现。</li>
+              <li>2. <strong>建立“主力+备用”双保险拓扑</strong>：选用一家稳定的 IPLC/IEPL 专线机场作为日常主力（月付），同时购买一个几十元不过期的不限时按量流量包作为容灾兜底。</li>
+              <li>3. <strong>敏感支付信息物理隔离</strong>：尽量使用支付宝商户代扣或 USDT 加密货币支付，避免在小机场绑定长期免密自动续费协议。</li>
+              <li>4. <strong>及时导出订阅文件备份</strong>：定期将节点配置导出至本地，防止服务商官网临时被封锁时无法登录后台获取链接。</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 5: Affiliate Disclosure -->
+      <section id="ethics" class="rounded-xl border border-hairline bg-[#0D1117] p-6 md:p-8 shadow-xl">
+        <div class="flex items-center justify-between border-b border-hairline/60 pb-3 mb-5">
+          <h2 class="text-base md:text-lg font-bold text-fg flex items-center gap-2">
+            <span class="text-rose-400 font-mono">#05</span> 推广联盟链接（Affiliate）与商业利益透明声明
+          </h2>
+          <span class="text-[11px] text-rose-400 font-bold">FTC COMPLIANCE</span>
+        </div>
+        <p class="mb-3">
+          根据美国联邦贸易委员会（FTC）及全球网络行业通行的合规倡议，本站对所有商业变现模式与利益关联保持 **100% 公开透明**：
+        </p>
+        <p class="mb-3">
+          本站所收录的部分品牌详情页与对比表格中包含带有追踪参数的商业推广链接（即 <code class="rounded bg-base px-1.5 py-0.5 text-accent font-bold">/go/[slug]</code> 安全跳转路由）。当您通过该链接完成注册并购买订阅服务时，该服务商可能会向本站支付微薄的引流返还佣金。
+        </p>
+        <div class="rounded-lg border border-hairline bg-base/60 p-4 mb-3 text-[11px] text-muted space-y-2">
+          <p>
+            <strong>关于推广返佣，我们向每一位读者郑重承诺：</strong>
+          </p>
+          <ul class="list-disc pl-4 space-y-1">
+            <li><strong>零加价保证</strong>：通过本站推广链接购买，您支付的实际价格与直接访问官网完全一致，绝不会产生任何附加费用；相反，通过本站合作渠道往往可以享受专属折扣券（如 8 折、85 折）。</li>
+            <li><strong>财务自收自支</strong>：所有推广佣金收入均专项用于维持本站珠海 9Gbps 物理测试探针专线、采购 42 家机场订阅账户进行盲测、以及支付高防 CDN 流量费用。</li>
+            <li><strong>评测结论独立性</strong>：佣金比例高低绝对不影响品牌的排名权重与缺点公示。即使是合作返佣最高的品牌，一旦出现晚高峰断流或服务降级，本站同样会如实公布评测报告与负面评价。</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Section 6: Legal & Compliance -->
+      <section class="rounded-xl border border-hairline bg-[#0D1117] p-6 md:p-8 shadow-xl">
+        <div class="flex items-center justify-between border-b border-hairline/60 pb-3 mb-5">
+          <h2 class="text-base md:text-lg font-bold text-fg flex items-center gap-2">
+            <span class="text-emerald-400 font-mono">#06</span> 法律法规合规性声明与学术研究免责声明
+          </h2>
+          <span class="text-[11px] text-emerald-400 font-bold">LEGAL DISCLAIMER</span>
+        </div>
+        <p class="mb-3">
+          <strong>机场订阅（jichangdingyue.blog）</strong> 本身不提供任何网络节点代理服务、不设立任何 VPN 服务器，亦不参与任何第三方机场的实际运营与售后服务。
+        </p>
+        <p class="mb-3">
+          本站所发布的所有网络测速图谱、节点拓扑分析、客户端配置指南及学术文章，均仅用于**分布式网络基础设施可观测性研究、跨境电商技术协议探讨、计算机网络学术文献检索**以及中国企业合规出海业务参考。
+        </p>
+        <p class="text-[11px] text-muted/80 border-t border-hairline/50 pt-3">
+          使用者在访问与使用第三方服务时，应当严格遵守中华人民共和国各项法律法规及使用者所在国家或地区的相关法律。严禁利用任何网络代理工具从事危害国家安全、传播违法违规内容或侵犯他人知识产权的活动。使用者需自行承担因违规操作而产生的任何法律后果。
+        </p>
+      </section>
+
+      <!-- Section 7: FAQ with FAQPage Schema -->
+      <section class="rounded-xl border border-hairline bg-[#0D1117] p-6 md:p-8 shadow-xl">
+        <div class="flex items-center justify-between border-b border-hairline/60 pb-3 mb-5">
+          <h2 class="text-base md:text-lg font-bold text-fg flex items-center gap-2">
+            <span class="text-accent font-mono">#07</span> 评测准则高频疑问解答 (FAQ)
+          </h2>
+          <span class="text-[11px] text-accent font-bold">Q&A OBSERVATORY</span>
+        </div>
+        <div class="space-y-4">
+          {aboutFaqs.map((faq, idx) => (
+            <div class="rounded-lg border border-hairline bg-base/60 p-4">
+              <h3 class="text-xs font-bold text-fg mb-2 flex items-start gap-2">
+                <span class="text-accent font-mono shrink-0">Q{idx + 1}:</span>
+                <span>{faq.q}</span>
+              </h3>
+              <p class="text-[11px] text-muted pl-6 leading-relaxed">
+                {faq.a}
+              </p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <!-- Bottom Interactive CTA -->
+      <div class="rounded-xl border border-accent/40 bg-accent/5 p-8 text-center font-mono">
+        <h3 class="text-lg font-bold text-fg mb-2">探索我们经过真机实测检验的品牌库</h3>
+        <p class="text-xs text-muted max-w-xl mx-auto mb-5 leading-relaxed">
+          基于全量 42 家品牌全景横评数据、17 家真机图谱认证以及 4 大场景细分榜单，帮您在 10 秒内做出最理性的网络决策。
+        </p>
+        <div class="flex flex-wrap items-center justify-center gap-3">
+          <a
+            href="/brands"
+            class="rounded bg-accent px-6 py-2.5 text-xs font-bold text-on-accent hover:opacity-90 transition-opacity shadow-lg"
+          >
+            浏览 42 家机场品牌库 →
+          </a>
+          <a
+            href="/"
+            class="rounded border border-outline bg-base px-5 py-2.5 text-xs font-medium text-fg hover:border-accent hover:text-accent transition-colors"
+          >
+            返回首页全景横评大表
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</Layout>

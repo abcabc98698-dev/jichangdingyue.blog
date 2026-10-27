@@ -7,7 +7,7 @@ const webUrl = z
 
 export function resolveSiteUrl(value: string | undefined): string {
   const trimmed = value?.trim() ?? '';
-  if (!trimmed) return 'https://example.com';
+  if (!trimmed) return 'https://jichangdingyue.blog';
   return webUrl.parse(trimmed);
 }
 const action = z.object({
@@ -32,74 +32,74 @@ const schema = z.object({
   repository: webUrl,
   author: z.string().min(1),
   version: z.string().min(1),
-  ctas: z.object({ en: ctas, 'pt-br': ctas }),
+  ctas: z.object({ 'zh-CN': ctas }),
   nav: z.array(z.object({ href: z.string().regex(/^\/(?!\/)[a-z0-9/-]*$/), key: z.string().min(1) })),
   hero: z.object({
-    en: z.object({ title: z.string(), description: z.string() }),
-    'pt-br': z.object({ title: z.string(), description: z.string() }),
+    'zh-CN': z.object({ title: z.string(), description: z.string() }),
   }),
   install: z.array(
     z.object({ id: z.string().regex(/^[a-z0-9-]+$/), label: z.string().min(1), command: z.string().min(1) }),
   ),
+  verification: z
+    .object({
+      google: z.string().optional(),
+      bing: z.string().optional(),
+      shenma: z.string().optional(),
+      baidu: z.string().optional(),
+    })
+    .optional(),
 });
 
 export const parseSite = (value: unknown) => schema.parse(value);
 export const site = parseSite({
-  name: 'Noir CLI',
-  terminalLabel: '~/noir-cli',
+  name: '机场订阅',
+  terminalLabel: '机场订阅',
   url: resolveSiteUrl(process.env.SITE_URL),
-  repository: 'https://github.com/nandomoreirame/terminalnoir-astro-theme',
-  author: 'Your name',
-  version: '0.0.1',
+  repository: 'https://jichangdingyue.blog',
+  author: '机场订阅',
+  version: '2026.1',
+  verification: {
+    google: process.env.PUBLIC_GOOGLE_VERIFICATION || '',
+    bing: process.env.PUBLIC_BING_VERIFICATION || '',
+    shenma: process.env.PUBLIC_SHENMA_VERIFICATION || '',
+    baidu: process.env.PUBLIC_BAIDU_VERIFICATION || '',
+  },
   ctas: {
-    en: {
-      header: { label: 'Get started', href: '/docs#quickstart' },
+    'zh-CN': {
+      header: { label: '机场推荐', href: '/brands' },
       hero: {
-        primary: { label: 'Docs', href: '/docs' },
-        secondary: { label: 'Integrations', href: '/integrations' },
+        primary: { label: '品牌评测库', href: '/brands' },
+        secondary: { label: '专题榜单', href: '/topics' },
       },
       box: {
-        eyebrow: 'Open source',
-        title: 'Make it yours.',
-        body: 'Replace the name, domain and example integrations, then publish the static site.',
-        primary: { label: 'GitHub repository', href: 'repository' },
-        secondary: { label: 'Read the guide', href: '/docs' },
-      },
-    },
-    'pt-br': {
-      header: { label: 'Começar', href: '/docs#quickstart' },
-      hero: {
-        primary: { label: 'Documentação', href: '/docs' },
-        secondary: { label: 'Integrações', href: '/integrations' },
-      },
-      box: {
-        eyebrow: 'Código aberto',
-        title: 'Deixe com a sua cara.',
-        body: 'Troque o nome, o domínio e as integrações de exemplo, e publique o site estático.',
-        primary: { label: 'Repositório no GitHub', href: 'repository' },
-        secondary: { label: 'Ler o guia', href: '/docs' },
+        eyebrow: '客观公正 · 真实测速',
+        title: '告别断联与卡顿，挑选专属稳定节点。',
+        body: '基于 2026 最新晚高峰真机测速与 AI / 流媒体真实解锁矩阵，无虚假承诺，透明对比。',
+        primary: { label: '浏览品牌测评库', href: '/brands' },
+        secondary: { label: '客户端配置教程', href: '/clients' },
       },
     },
   },
   nav: [
     { href: '/', key: 'nav.home' },
+    { href: '/jichang', key: 'nav.jichang' },
+    { href: '/tizi', key: 'nav.tizi' },
+    { href: '/vpn', key: 'nav.vpn' },
+    { href: '/clash', key: 'nav.clash' },
+    { href: '/nodes', key: 'nav.nodes' },
+    { href: '/brands', key: 'nav.brands' },
+    { href: '/tutorial', key: 'nav.tutorial' },
+    { href: '/free', key: 'nav.free' },
     { href: '/about', key: 'nav.about' },
-    { href: '/integrations', key: 'nav.integrations' },
-    { href: '/docs', key: 'nav.docs' },
-    { href: '/showcase', key: 'nav.showcase' },
   ],
   hero: {
-    en: {
-      title: 'Build with clarity.',
-      description: 'A fictional developer tool demonstrating Terminal Noir Astro Theme.',
-    },
-    'pt-br': {
-      title: 'Desenvolva com clareza.',
-      description: 'Uma ferramenta fictícia para demonstrar o Terminal Noir Astro Theme.',
+    'zh-CN': {
+      title: '网络基础设施与节点可观测性评测中心',
+      description: '剔除虚假宣传与套壳水军，基于真实晚高峰 20:30 带宽测速、丢包率与 AI / 流媒体真实解锁矩阵。',
     },
   },
   install: [
-    { id: 'npm', label: 'npm example', command: 'npm install example-package' },
-    { id: 'pnpm', label: 'pnpm example', command: 'pnpm add example-package' },
+    { id: 'clash', label: 'Clash Verge', command: '订阅导入 -> 一键测速 -> 规则分流' },
+    { id: 'v2ray', label: 'v2rayN', command: '剪贴板导入 -> 真实延迟测试 -> 启动系统代理' },
   ],
 });

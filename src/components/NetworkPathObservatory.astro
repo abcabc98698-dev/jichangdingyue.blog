@@ -1,0 +1,80 @@
+---
+interface Props {
+  brandName: string;
+  lineType: string;
+  protocols: string[];
+}
+
+const { brandName, lineType, protocols } = Astro.props;
+---
+
+<div class="my-6 rounded-lg border border-hairline bg-[#0D1117] p-5 font-mono text-xs shadow-xl">
+  <!-- Header -->
+  <div class="flex items-center justify-between border-b border-hairline/60 pb-3">
+    <div class="flex items-center gap-2">
+      <span class="inline-block size-2 rounded-full bg-violet-400"></span>
+      <span class="font-bold text-fg text-sm tracking-wide">
+        🗺️ {brandName} 网络路由拓扑 (Network Path Observatory)
+      </span>
+    </div>
+    <span class="rounded bg-violet-950/70 text-violet-300 border border-violet-800 px-2 py-0.5 text-[11px]">
+      {lineType}
+    </span>
+  </div>
+
+  <!-- Topology Flow -->
+  <div class="mt-4 flex flex-col md:flex-row items-stretch justify-between gap-2.5 text-center">
+    <!-- Step 1: User Client -->
+    <div class="flex-1 rounded border border-hairline bg-raised/50 p-3 flex flex-col justify-center">
+      <div class="text-accent font-semibold mb-1">💻 用户本地终端</div>
+      <div class="text-muted text-[11px]">Clash / v2rayN / 小火箭</div>
+      <div class="mt-2 text-[10px] text-emerald-400 font-mono">
+        协议: {protocols.join(' / ')}
+      </div>
+    </div>
+
+    <div class="flex items-center justify-center text-muted md:rotate-0 rotate-90">
+      ➔
+    </div>
+
+    <!-- Step 2: Ingress BGP -->
+    <div class="flex-1 rounded border border-hairline bg-raised/50 p-3 flex flex-col justify-center">
+      <div class="text-fg font-semibold mb-1">⚡ 国内智能入口</div>
+      <div class="text-muted text-[11px]">上海 / 广州 / 深圳 BGP</div>
+      <div class="mt-2 text-[10px] text-muted font-mono">
+        智能调度 · 隐藏真实IP
+      </div>
+    </div>
+
+    <div class="flex items-center justify-center text-accent font-bold md:rotate-0 rotate-90">
+      ═══▶
+    </div>
+
+    <!-- Step 3: Dedicated Tunnel -->
+    <div class="flex-1 rounded border border-accent/40 bg-accent/5 p-3 flex flex-col justify-center">
+      <div class="text-accent font-bold mb-1">🛡️ 物理专线传输</div>
+      <div class="text-muted text-[11px]">IEPL / IPLC 内网直连</div>
+      <div class="mt-2 text-[10px] text-accent font-mono font-bold">
+        0丢包 · 不经公网GFW
+      </div>
+    </div>
+
+    <div class="flex items-center justify-center text-muted md:rotate-0 rotate-90">
+      ➔
+    </div>
+
+    <!-- Step 4: Egress Landing -->
+    <div class="flex-1 rounded border border-hairline bg-raised/50 p-3 flex flex-col justify-center">
+      <div class="text-fg font-semibold mb-1">🌐 海外原生落地</div>
+      <div class="text-muted text-[11px]">香港 / 东京 / 新加坡 / 洛杉矶</div>
+      <div class="mt-2 text-[10px] text-emerald-400 font-mono">
+        原生住宅/商用纯净IP
+      </div>
+    </div>
+  </div>
+
+  <div class="mt-4 border-t border-hairline/60 pt-2.5 text-[11px] text-muted flex justify-between">
+    <span>架构特征：全流程内网专线隧道隔离，规避公网 QoS 流量识别与劣化。</span>
+    <span>PATH: OPTIMIZED</span>
+  </div>
+</div>

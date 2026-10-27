@@ -6,7 +6,7 @@ import '../styles/global.css';
 import { Icon } from 'astro-icon/components';
 import { site } from '../config/site';
 import { getI18n } from '../i18n/context';
-import { LOCALE_LABELS, LOCALES, htmlLang, switchLocalePath } from '../i18n/locales';
+import { htmlLang } from '../i18n/locales';
 import { ui, type UiKey } from '../i18n/ui';
 import { cssVariables } from '../lib/palette';
 import { pageMetadata } from '../lib/seo';
@@ -17,19 +17,33 @@ import { getCtas } from '../lib/ctas';
 interface Props {
   title?: string;
   description?: string;
+  schema?: Record<string, unknown>;
+  robots?: string;
+  article?: {
+    publishedTime?: string;
+    modifiedTime?: string;
+    author?: string;
+    tags?: string[];
+  };
 }
 
 const { locale, t, path } = getI18n(Astro.currentLocale);
-const { title, description = site.hero[locale].description } = Astro.props;
-const pageTitle = title ? `${title} · ${site.name}` : site.name;
+const {
+  title,
+  description = site.hero[locale]?.description || site.name,
+  schema,
+  robots,
+  article,
+} = Astro.props;
+const pageTitle = title ? `${title} · ${site.name}` : `${site.name} - 2026 稳定机场推荐与网络节点实测平台`;
 const pathname = Astro.url.pathname;
 const base = import.meta.env.BASE_URL;
 const ctas = getCtas(locale, base);
 const home = path('/');
 
 function navigationLabel(key: string): string {
-  if (!(key in ui.en) || !(key in ui['pt-br'])) throw new Error(`Unknown navigation key: ${key}`);
-  return t(key as UiKey);
+  if (key in ui['zh-CN']) return t(key as UiKey);
+  return key;
 }
 
 const block = (vars: Record<string, string>) =>
@@ -43,7 +57,7 @@ const themeCss =
 
 const navLink = (active: boolean) => [
   'border-b pb-1 font-mono text-xs tracking-wider uppercase transition-colors',
-  active ? 'border-accent text-accent' : 'border-transparent text-muted hover:text-fg',
+  active ? 'border-accent text-accent font-semibold' : 'border-transparent text-muted hover:text-fg',
 ];
 const nav = site.nav.map(item => {
   const href = path(item.href);
@@ -59,19 +73,36 @@ const meta = pageMetadata(site.url, base, pathname, pageTitle, description);
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{meta.title}</title>
     <meta name="description" content={meta.description} />
+    <meta name="robots" content={robots || "index, follow, max-image-preview:large, max-snippet:-1"} />
     <link rel="canonical" href={meta.canonical} />
     <link rel="icon" href={asset('/favicon.svg', base)} type="image/svg+xml" />
-    <link rel="alternate" hreflang={htmlLang('en')} href={meta.alternates.en} />
-    <link rel="alternate" hreflang={htmlLang('pt-br')} href={meta.alternates['pt-br']} />
-    <link rel="alternate" hreflang="x-default" href={meta.alternates.en} />
+    <link rel="alternate" hreflang="zh-CN" href={meta.canonical} />
+
+    {/* Search Engine Webmaster Verifications (Google, Bing, Shenma, Baidu) */}
+    {site.verification?.google && <meta name="google-site-verification" content={site.verification.google} />}
+    {site.verification?.bing && <meta name="msvalidate.01" content={site.verification.bing} />}
+    {site.verification?.shenma && <meta name="shenma-site-verification" content={site.verification.shenma} />}
+    {site.verification?.baidu && <meta name="baidu-site-verification" content={site.verification.baidu} />}
+
     <meta property="og:title" content={meta.title} />
     <meta property="og:description" content={meta.description} />
     <meta property="og:url" content={meta.canonical} />
     <meta property="og:image" content={meta.image} />
+    <meta property="og:type" content={article ? 'article' : 'website'} />
+    <meta property="og:site_name" content={site.name} />
+
+    {article?.publishedTime && <meta property="article:published_time" content={article.publishedTime} />}
+    {article?.modifiedTime && <meta property="article:modified_time" content={article.modifiedTime} />}
+    {article?.author && <meta property="article:author" content={article.author} />}
+    {article?.tags?.map((tag: string) => <meta property="article:tag" content={tag} />)}
+
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={meta.title} />
     <meta name="twitter:description" content={meta.description} />
     <meta name="twitter:image" content={meta.image} />
+    {schema && (
+      <script type="application/ld+json" is:inline set:html={JSON.stringify(schema)} />
+    )}
     <style is:inline set:html={themeCss} />
     <script is:inline>
       try {
@@ -87,13 +118,14 @@ const meta = pageMetadata(site.url, base, pathname, pageTitle, description);
       {t('a11y.skip')}
     </a>
 
-    <header class="sticky top-0 z-50 border-b border-hairline bg-base">
+    <header class="sticky top-0 z-50 border-b border-hairline bg-base/95 backdrop-blur-md">
       <div class="mx-auto flex h-14 max-w-5xl items-center justify-between gap-4 px-6">
         <a
           href={home}
-          class="flex items-center gap-1 font-mono text-sm tracking-tight text-fg"
+          class="flex items-center gap-1.5 font-mono text-sm tracking-tight text-fg font-bold"
           aria-label={`${site.name}, ${t('nav.home')}`}
         >
+          <span class="inline-block size-2 rounded-full bg-accent animate-pulse" aria-hidden="true"></span>
           <span>{site.terminalLabel}</span>
           <span class="cursor" aria-hidden="true"></span>
         </a>
@@ -111,25 +143,6 @@ const meta = pageMetadata(site.url, base, pathname, pageTitle, description);
         </nav>
 
         <div class="flex items-center gap-3">
-          <nav aria-label={t('nav.language')} class="flex items-center rounded border border-hairline bg-raised p-0.5">
-            {LOCALES.map(l => (
-              <a
-                href={switchLocalePath(pathname, l, base)}
-                hreflang={htmlLang(l)}
-                lang={htmlLang(l)}
-                aria-current={l === locale ? 'true' : undefined}
-                aria-label={`${LOCALE_LABELS[l].short}, ${LOCALE_LABELS[l].name}`}
-                class:list={[
-                  'rounded border px-2 py-0.5 font-mono text-[11px] transition-colors',
-                  l === locale
-                    ? 'border-outline bg-elevated text-accent'
-                    : 'border-transparent text-muted hover:text-fg',
-                ]}
-              >
-                {LOCALE_LABELS[l].short}
-              </a>
-            ))}
-          </nav>
           <div
             role="group"
             aria-label={t('theme.group')}
@@ -153,13 +166,6 @@ const meta = pageMetadata(site.url, base, pathname, pageTitle, description);
             </button>
           </div>
           <a
-            href={site.repository}
-            class="hidden items-center gap-1.5 rounded border border-outline px-3 py-1.5 font-mono text-xs text-fg transition-colors hover:border-accent lg:flex"
-          >
-            <Icon name="simple-icons:github" class="size-3.5" aria-hidden="true" />
-            <span>{t('nav.github')}</span>
-          </a>
-          <a
             href={ctas.header.href}
             class="hidden rounded bg-accent px-3.5 py-1.5 font-mono text-xs font-semibold whitespace-nowrap text-on-accent transition-opacity hover:opacity-95 sm:block"
           >
@@ -180,30 +186,6 @@ const meta = pageMetadata(site.url, base, pathname, pageTitle, description);
             ))}
           </ul>
         </nav>
-        <div class="mx-auto flex max-w-5xl px-6 pb-2.5 sm:hidden">
-          <div
-            role="group"
-            aria-label={t('theme.group')}
-            class="inline-flex items-center rounded border border-hairline bg-raised p-0.5"
-          >
-            <button
-              type="button"
-              data-theme-choice="dark"
-              class="theme-choice flex items-center gap-1 rounded border border-transparent px-2 py-0.5 font-mono text-[11px] text-muted"
-            >
-              <Icon name="lucide:moon" class="size-3" aria-hidden="true" />
-              {t('theme.noir')}
-            </button>
-            <button
-              type="button"
-              data-theme-choice="light"
-              class="theme-choice flex items-center gap-1 rounded border border-transparent px-2 py-0.5 font-mono text-[11px] text-muted"
-            >
-              <Icon name="lucide:sun" class="size-3" aria-hidden="true" />
-              {t('theme.paper')}
-            </button>
-          </div>
-        </div>
       </div>
     </header>
 
@@ -213,21 +195,13 @@ const meta = pageMetadata(site.url, base, pathname, pageTitle, description);
 
     <footer class="border-t border-hairline bg-base">
       <div class="mx-auto flex max-w-5xl flex-col items-center justify-between gap-6 px-6 py-8 md:flex-row">
-        <div class="flex flex-col items-center gap-3 text-center sm:flex-row sm:text-left">
-          <span class="font-mono text-sm text-fg">{site.terminalLabel}</span>
+        <div class="flex flex-col items-center gap-2 text-center sm:flex-row sm:text-left">
+          <span class="font-mono text-sm font-semibold text-fg">{site.terminalLabel}</span>
           <span class="text-xs text-muted">
-            {site.name} v{site.version}. {site.author}.
+            © 2026 {site.name} · 网络可观测性评测中心
           </span>
-          <span class="text-xs text-muted">
-            by{' '}
-            <a
-              href="https://github.com/nandomoreirame"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="underline hover:text-fg"
-            >
-              nandomoreira.dev
-            </a>
+          <span class="text-xs text-muted/70">
+            仅作网络测速与学术节点评测 · 客观中立
           </span>
         </div>
         <nav aria-label={t('nav.footer')}>
@@ -239,11 +213,6 @@ const meta = pageMetadata(site.url, base, pathname, pageTitle, description);
                 </a>
               </li>
             ))}
-            <li>
-              <a class="hover:text-fg" href={site.repository}>
-                {t('nav.github')}
-              </a>
-            </li>
           </ul>
         </nav>
       </div>

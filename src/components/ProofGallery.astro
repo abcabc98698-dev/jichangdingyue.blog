@@ -1,0 +1,213 @@
+---
+import type { ProofImages, DetailedReview } from '../data/brands';
+
+interface Props {
+  brandName: string;
+  isVerified?: boolean;
+  proofImages?: ProofImages;
+  detailedReview?: DetailedReview;
+}
+
+const { brandName, isVerified, proofImages, detailedReview } = Astro.props;
+---
+
+{isVerified && proofImages && (
+  <section class="rounded-xl border border-emerald-500/30 bg-[#0B0F17] p-5 md:p-7 shadow-2xl overflow-hidden font-mono">
+    <!-- Header -->
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 border-b border-hairline/60 pb-4">
+      <div class="flex items-center gap-2.5">
+        <span class="inline-flex h-3 w-3 rounded-full bg-emerald-400 animate-pulse"></span>
+        <h2 class="text-base md:text-lg font-bold text-fg tracking-tight">
+          【实测证据库】官方真机节点测速与流媒体/AI 解锁图谱
+        </h2>
+      </div>
+      <div class="flex flex-wrap items-center gap-2 text-[11px]">
+        <span class="rounded bg-emerald-950/80 px-2 py-0.5 font-bold text-emerald-400 border border-emerald-500/40">
+          ✓ 官方真机实测认证
+        </span>
+        {proofImages.testDate && (
+          <span class="rounded bg-base px-2 py-0.5 text-muted border border-hairline">
+            时间: {proofImages.testDate}
+          </span>
+        )}
+        {proofImages.testTool && (
+          <span class="rounded bg-base px-2 py-0.5 text-cyan-400 border border-cyan-800/40">
+            工具: {proofImages.testTool}
+          </span>
+        )}
+      </div>
+    </div>
+
+    <!-- Notes banner -->
+    {proofImages.notes && (
+      <div class="mt-4 rounded border border-hairline/60 bg-raised/40 p-3 text-xs text-muted leading-relaxed">
+        <span class="text-accent font-bold">📋 证据链说明：</span>
+        {proofImages.notes}
+      </div>
+    )}
+
+    <!-- Image Cards Grid -->
+    <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-5">
+      <!-- Speedtest Image Card -->
+      {proofImages.speedtest && (
+        <div class="group relative rounded-lg border border-hairline bg-base/80 p-3 transition-all hover:border-emerald-500/50 flex flex-col">
+          <div class="mb-2 flex items-center justify-between text-xs">
+            <span class="font-bold text-fg flex items-center gap-1.5">
+              <span class="text-emerald-400">📊</span> 节点测速实测大图
+            </span>
+            <span class="text-[11px] text-muted">点击查看高清原图 ↗</span>
+          </div>
+          <div class="relative overflow-hidden rounded border border-hairline/50 bg-[#06090E] cursor-zoom-in group-hover:opacity-95 transition-opacity">
+            <img
+              src={proofImages.speedtest}
+              alt={`${brandName} 官方节点测速实测截图`}
+              loading="lazy"
+              class="w-full h-64 object-cover object-top transition-transform duration-300 group-hover:scale-[1.02] proof-zoomable-img"
+              data-full-src={proofImages.speedtest}
+              data-caption={`${brandName} - 官方真机节点测速实测报告`}
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-base via-transparent to-transparent opacity-60 pointer-events-none"></div>
+            <div class="absolute bottom-2 left-2 right-2 flex justify-between items-center text-[11px] text-muted bg-base/90 backdrop-blur px-2 py-1 rounded border border-hairline/40">
+              <span>测速批次: {proofImages.testDate || '实测批次'}</span>
+              <span class="text-accent font-bold">点击全屏放大</span>
+            </div>
+          </div>
+          {detailedReview?.speedtestAnalysis && (
+            <p class="mt-3 text-xs text-muted leading-relaxed border-t border-hairline/40 pt-2.5">
+              <span class="text-emerald-400 font-semibold">实测解读：</span>
+              {detailedReview.speedtestAnalysis}
+            </p>
+          )}
+        </div>
+      )}
+
+      <!-- Unlock Image Card -->
+      {proofImages.unlock && (
+        <div class="group relative rounded-lg border border-hairline bg-base/80 p-3 transition-all hover:border-cyan-500/50 flex flex-col">
+          <div class="mb-2 flex items-center justify-between text-xs">
+            <span class="font-bold text-fg flex items-center gap-1.5">
+              <span class="text-cyan-400">🔓</span> 流媒体 & AI 解锁实测大图
+            </span>
+            <span class="text-[11px] text-muted">点击查看高清原图 ↗</span>
+          </div>
+          <div class="relative overflow-hidden rounded border border-hairline/50 bg-[#06090E] cursor-zoom-in group-hover:opacity-95 transition-opacity">
+            <img
+              src={proofImages.unlock}
+              alt={`${brandName} 流媒体与 AI 解锁测试截图`}
+              loading="lazy"
+              class="w-full h-64 object-cover object-top transition-transform duration-300 group-hover:scale-[1.02] proof-zoomable-img"
+              data-full-src={proofImages.unlock}
+              data-caption={`${brandName} - 流媒体与 AI 模型全绿解锁实测`}
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-base via-transparent to-transparent opacity-60 pointer-events-none"></div>
+            <div class="absolute bottom-2 left-2 right-2 flex justify-between items-center text-[11px] text-muted bg-base/90 backdrop-blur px-2 py-1 rounded border border-hairline/40">
+              <span>解锁范围: Netflix / Disney+ / OpenAI</span>
+              <span class="text-cyan-400 font-bold">点击全屏放大</span>
+            </div>
+          </div>
+          {detailedReview?.unlockAnalysis && (
+            <p class="mt-3 text-xs text-muted leading-relaxed border-t border-hairline/40 pt-2.5">
+              <span class="text-cyan-400 font-semibold">解锁解读：</span>
+              {detailedReview.unlockAnalysis}
+            </p>
+          )}
+        </div>
+      )}
+    </div>
+
+    <!-- In-Depth Review Narrative if available -->
+    {detailedReview && (
+      <div class="mt-6 space-y-4 border-t border-hairline/60 pt-5 text-xs text-muted leading-relaxed">
+        {detailedReview.overview && (
+          <div>
+            <h4 class="font-bold text-fg mb-1 flex items-center gap-1.5 text-sm">
+              <span class="text-accent">◈</span> 品牌背景与定位概述
+            </h4>
+            <p>{detailedReview.overview}</p>
+          </div>
+        )}
+        {detailedReview.architecture && (
+          <div>
+            <h4 class="font-bold text-fg mb-1 flex items-center gap-1.5 text-sm">
+              <span class="text-accent">◈</span> 专线拓扑与数据安全架构剖析
+            </h4>
+            <p>{detailedReview.architecture}</p>
+          </div>
+        )}
+        {detailedReview.verdict && (
+          <div class="rounded border border-hairline bg-raised/40 p-3 text-fg">
+            <span class="text-emerald-400 font-bold">💡 测评专家终审结论：</span>
+            {detailedReview.verdict}
+          </div>
+        )}
+      </div>
+    )}
+
+    <!-- Lightbox Modal -->
+    <div
+      id="proof-lightbox"
+      class="fixed inset-0 z-50 hidden bg-black/95 backdrop-blur-md flex flex-col items-center justify-center p-4"
+    >
+      <div class="absolute top-4 right-6 flex items-center gap-4 z-10">
+        <span id="lightbox-caption" class="text-xs text-muted font-mono hidden md:inline"></span>
+        <button
+          id="close-lightbox"
+          class="rounded-lg border border-hairline bg-raised/80 px-4 py-2 text-xs font-bold text-fg hover:bg-base hover:text-accent transition-colors"
+        >
+          关闭预览 [ESC]
+        </button>
+      </div>
+      <div class="max-w-6xl max-h-[88vh] overflow-auto rounded border border-hairline/50 p-2 bg-[#05080E]">
+        <img
+          id="lightbox-img"
+          src=""
+          alt="高清实测大图"
+          class="max-w-full max-h-[82vh] object-contain mx-auto"
+        />
+      </div>
+    </div>
+  </section>
+)}
+
+<script>
+  function setupLightbox() {
+    const zoomableImgs = document.querySelectorAll('.proof-zoomable-img');
+    const lightbox = document.getElementById('proof-lightbox');
+    const lightboxImg = document.getElementById('lightbox-img') as HTMLImageElement;
+    const lightboxCaption = document.getElementById('lightbox-caption');
+    const closeBtn = document.getElementById('close-lightbox');
+
+    if (!lightbox || !lightboxImg) return;
+
+    zoomableImgs.forEach(img => {
+      img.addEventListener('click', () => {
+        const fullSrc = img.getAttribute('data-full-src') || (img as HTMLImageElement).src;
+        const caption = img.getAttribute('data-caption') || '';
+        lightboxImg.src = fullSrc;
+        if (lightboxCaption) lightboxCaption.textContent = caption;
+        lightbox.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+      });
+    });
+
+    const close = () => {
+      lightbox.classList.add('hidden');
+      lightboxImg.src = '';
+      document.body.style.overflow = '';
+    };
+
+    closeBtn?.addEventListener('click', close);
+    lightbox.addEventListener('click', (e) => {
+      if (e.target === lightbox) close();
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && !lightbox.classList.contains('hidden')) {
+        close();
+      }
+    });
+  }
+
+  setupLightbox();
+  document.addEventListener('astro:page-load', setupLightbox);
+</script>

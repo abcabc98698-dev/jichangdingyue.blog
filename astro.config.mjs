@@ -2,28 +2,19 @@ import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
 import icon from 'astro-icon';
 import { defineConfig } from 'astro/config';
-import { site } from './src/config/site.ts';
 
 const base = process.env.SITE_BASE || '/';
 
 export default defineConfig({
-  site: site.url,
+  site: 'https://jichangdingyue.blog',
   base,
   output: 'static',
   integrations: [
     icon(),
     sitemap({
-      i18n: {
-        defaultLocale: 'en',
-        locales: { en: 'en', 'pt-br': 'pt-BR' },
-      },
+      filter: (page) => !page.includes('/go/'),
     }),
   ],
-  i18n: {
-    defaultLocale: 'en',
-    locales: ['en', 'pt-br'],
-    routing: { prefixDefaultLocale: false },
-  },
   trailingSlash: 'never',
   build: {
     format: 'directory',

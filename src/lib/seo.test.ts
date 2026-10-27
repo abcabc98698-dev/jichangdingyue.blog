@@ -2,21 +2,19 @@ import { readFileSync } from 'node:fs';
 import { expect, it } from 'vitest';
 import { pageMetadata, robotsBody } from './seo';
 
-it('builds absolute base-aware canonical and alternate links', () => {
-  const meta = pageMetadata('https://example.com', '/toolkit/', '/toolkit/pt-br/docs/', 'Docs', 'Guide');
-  expect(meta.canonical).toBe('https://example.com/toolkit/pt-br/docs');
-  expect(meta.alternates.en).toBe('https://example.com/toolkit/docs');
-  expect(meta.image).toBe('https://example.com/toolkit/og-image.svg');
+it('builds absolute base-aware canonical link', () => {
+  const meta = pageMetadata('https://jichangdingyue.blog', '/', '/brands', '品牌测评库', '测评大全');
+  expect(meta.canonical).toBe('https://jichangdingyue.blog/brands');
+  expect(meta.alternates['zh-CN']).toBe('https://jichangdingyue.blog/brands');
 });
 
-it('points robots at the sitemap index for the configured base', () => {
-  expect(robotsBody('https://example.com', '/toolkit/')).toContain(
-    'Sitemap: https://example.com/toolkit/sitemap-index.xml',
-  );
-  expect(robotsBody('https://example.com', '/')).toContain('Sitemap: https://example.com/sitemap-index.xml');
+it('points robots at the sitemap index and disallows /go/ redirects', () => {
+  const robots = robotsBody('https://jichangdingyue.blog', '/');
+  expect(robots).toContain('Disallow: /go/');
+  expect(robots).toContain('Sitemap: https://jichangdingyue.blog/sitemap-index.xml');
 });
 
-it('includes the sitemap integration and drops the original domain', () => {
+it('includes sitemap integration in astro.config.mjs', () => {
   const config = readFileSync(new URL('../../astro.config.mjs', import.meta.url), 'utf8');
   expect(config).toContain('@astrojs/sitemap');
   expect(config).not.toContain(['terminalnoir', 'web.app'].join('.'));

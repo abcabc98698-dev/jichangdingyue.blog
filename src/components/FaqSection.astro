@@ -1,0 +1,66 @@
+---
+export const homeFaqs = [
+  {
+    question: '为什么有的机场白天测速几百兆，一到晚上 8 点后就频繁卡顿？',
+    answer: '这是典型的“公网直连中转”在晚高峰遭遇国际出口 QoS 流量管制与带宽拥塞的现象。白天国际出口闲置，测速自然好看；而晚高峰全民上网，公网出口拥堵、丢包率飙升。真正稳定的机场会使用 IPLC/IEPL 物理内网专线，流量在境内由企业内网封装直连海外，根本不经过公网国际海缆出口，因此晚高峰依然能做到 0 丢包。',
+  },
+  {
+    question: '什么是 IPLC 和 IEPL 专线？二者有什么本质区别？',
+    answer: 'IPLC（International Private Leased Circuit）是跨国点对点物理私有租用线路；IEPL（International Ethernet Private Line）则是基于二层以太网协议的国际专线。两者对最终用户而言体验极为接近：都不经过常规公网防火墙、延迟极低且极度稳定。IEPL 在网络扩展性和多点接入上更加灵活，而 IPLC 则是最老牌的物理级点对点保障。',
+  },
+  {
+    question: '新手第一次买机场，为什么强烈建议“优先月付，少买年付”？',
+    answer: '机场行业受政策风控、上游机房跑路及 DDoS 攻击影响较大，任何商家都无法做出“永久在线”的绝对担保。年付虽然单月折算下来便宜，但一旦服务商运营异常将蒙受较大损失。新手建议先购买 1 个月的最基础套餐，实测所在网络运营商（电信、联通、移动）在晚高峰的真实表现，满意且稳定 2~3 个月后再考虑长周期。',
+  },
+  {
+    question: '什么是“节点倍率”？1 倍率和 3 倍率有什么讲究？',
+    answer: '节点倍率是指实际扣除流量的系数。例如使用 1 倍率节点消耗 1GB 流量，账户就扣除 1GB；如果使用 3 倍率甚至 5 倍率的高级节点，你看一部 10GB 的 4K 电影，账户会被扣除 30GB 或 50GB 流量。本站优先推荐全线 1 倍率或无倍率虚标的透明机场。',
+  },
+  {
+    question: '为什么同一个节点，可以看 YouTube 4K，却打不开 ChatGPT 或 Claude？',
+    answer: '不同海外平台对 IP 的风控级别完全不同。YouTube/Google 对 IP 纯净度要求较低，数据中心商业机房 IP 均可顺畅访问；而 OpenAI、Anthropic（Claude）对机房托管 IP 实施了严厉的封控策略。只有具备“原生住宅 IP”或专有反代分流清洗的节点，才能绕过 AI 平台的 Access Denied 报错。',
+  },
+  {
+    question: '自研专属客户端和 Clash / v2rayN 等通用客户端哪个好？',
+    answer: '各有利弊。自研专属客户端（如飞猫云、Firefly）的优点是开箱即用，无需手动输入订阅链接或配置分流规则，极适合小白；通用客户端（如 Clash Verge Rev、v2rayN、Shadowrocket）的优点是规则自由度极高，可以自定义国内分流、广告拦截与多个机场订阅聚合，适合进阶用户。',
+  },
+  {
+    question: '什么是不限时流量包？适合什么样的用户群体？',
+    answer: '不限时流量包（按量计费包）通常为一次性买断，流量永久有效或超长有效，永不清零。非常适合平时主要使用公司/校园网、月消耗不足 10GB 的轻度备用人群，花费数十元至百元即可用上一两年，彻底避免每月按期扣费浪费。',
+  },
+  {
+    question: '机场可以在家用电视盒、软路由或 Apple TV 上使用吗？',
+    answer: '完全可以。只要机场提供通用订阅链接（Clash YAML、SS/Trojan 链接），即可导入软路由中的 OpenClash、PassWall2 等插件，实现全屋局域网所有手机、电脑、智能电视与 PS5/Switch 游戏机全自动无感代理。',
+  },
+];
+---
+
+<div class="my-10 rounded-xl border border-hairline bg-[#0D1117] p-6 md:p-8 font-mono text-xs shadow-xl">
+  <div class="mb-6">
+    <div class="text-xs text-emerald-400 font-semibold uppercase tracking-wider mb-1">
+      // COMPREHENSIVE KNOWLEDGE & FAQ
+    </div>
+    <h3 class="text-xl font-bold text-fg">
+      科学选型与避坑全景问答 (FAQ)
+    </h3>
+    <p class="text-xs text-muted mt-1">
+      涵盖晚高峰原理、专线技术细节、协议差异与防跑路实操要点
+    </p>
+  </div>
+
+  <div class="space-y-4">
+    {homeFaqs.map((faq, idx) => (
+      <div class="rounded-lg border border-hairline bg-raised/40 p-4.5 hover:border-accent/40 transition-colors">
+        <h4 class="text-sm font-bold text-fg mb-2 flex items-start gap-2">
+          <span class="rounded bg-accent/20 px-1.5 py-0.5 text-[10px] font-bold text-accent shrink-0 mt-0.5">
+            Q{idx + 1}
+          </span>
+          <span>{faq.question}</span>
+        </h4>
+        <p class="text-xs text-muted leading-relaxed pl-6">
+          {faq.answer}
+        </p>
+      </div>
+    ))}
+  </div>
+</div>

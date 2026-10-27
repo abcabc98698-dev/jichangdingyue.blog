@@ -1,19 +1,13 @@
 import { expect, it } from 'vitest';
 import { asset, route, alternate } from './urls';
 
-it.each([
-  ['/', 'en', '/', '/'],
-  ['/toolkit/', 'en', '/docs', '/toolkit/docs'],
-  ['/toolkit/', 'pt-br', '/integrations/editor', '/toolkit/pt-br/integrations/editor'],
-  ['/toolkit/', 'pt-br', '/docs#install', '/toolkit/pt-br/docs#install'],
-] as const)('composes %s %s %s', (base, locale, path, result) => expect(route(path, locale, base)).toBe(result));
-
-it('switches locale without duplicating the base', () => {
-  expect(alternate('/toolkit/pt-br/docs/', 'en', '/toolkit/')).toBe('/toolkit/docs');
-  expect(alternate('/toolkit/docs', 'pt-br', '/toolkit/')).toBe('/toolkit/pt-br/docs');
+it('composes routes correctly', () => {
+  expect(route('/', 'zh-CN', '/')).toBe('/');
+  expect(route('/brands', 'zh-CN', '/')).toBe('/brands');
+  expect(route('/brands#top', 'zh-CN', '/')).toBe('/brands#top');
 });
 
-it('resolves assets from the base without a locale prefix', () => {
+it('resolves assets from the base', () => {
   expect(asset('/favicon.svg', '/')).toBe('/favicon.svg');
-  expect(asset('/images/example.svg', '/toolkit/')).toBe('/toolkit/images/example.svg');
+  expect(asset('/og-image.svg', '/')).toBe('/og-image.svg');
 });

@@ -1,0 +1,100 @@
+---
+import { brands } from '../../data/brands';
+
+export function getStaticPaths() {
+  return brands.map(brand => ({
+    params: { slug: brand.slug },
+    props: { brand },
+  }));
+}
+
+const { brand } = Astro.props;
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>正在安全前往 {brand.name} 官网...</title>
+    <meta name="robots" content="noindex, nofollow" />
+    <meta http-equiv="refresh" content={`0;url=${brand.affLink}`} />
+    <style>
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background-color: #0B0F17;
+        color: #E6EDF3;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+        box-sizing: border-box;
+      }
+      .card {
+        max-width: 480px;
+        width: 100%;
+        background-color: #161B22;
+        border: 1px solid #30363D;
+        border-radius: 8px;
+        padding: 28px;
+        text-align: center;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+      }
+      .spinner {
+        display: inline-block;
+        width: 24px;
+        height: 24px;
+        border: 3px solid rgba(255, 255, 255, 0.2);
+        border-radius: 50%;
+        border-top-color: #F59E0B;
+        animation: spin 1s ease-in-out infinite;
+        margin-bottom: 16px;
+      }
+      @keyframes spin {
+        to { transform: rotate(360deg); }
+      }
+      h1 { font-size: 16px; margin: 0 0 12px 0; }
+      p { font-size: 12px; color: #8B949E; line-height: 1.6; margin: 8px 0; }
+      .btn {
+        display: inline-block;
+        margin-top: 16px;
+        padding: 10px 20px;
+        background-color: #F59E0B;
+        color: #000;
+        text-decoration: none;
+        border-radius: 4px;
+        font-weight: bold;
+        font-size: 13px;
+      }
+      .disclosure {
+        font-size: 11px;
+        color: #6E7681;
+        margin-top: 20px;
+        border-top: 1px solid #21262D;
+        padding-top: 14px;
+      }
+    </style>
+    <script is:inline define:vars={{ url: brand.affLink }}>
+      try {
+        window.location.replace(url);
+      } catch (e) {
+        window.location.href = url;
+      }
+    </script>
+  </head>
+  <body>
+    <div class="card">
+      <div class="spinner"></div>
+      <h1>正在安全前往 {brand.name} 官网</h1>
+      <p>正在建立加密链路跳转，如浏览器未自动响应，请点击下方按钮：</p>
+      <a href={brand.affLink} class="btn" rel="nofollow sponsored noopener">
+        立即访问 {brand.name} 官网
+      </a>
+      <div class="disclosure">
+        平台声明：本跳转含推广联盟代码，通过链接注册可能为本站运维带来微薄返佣支持，不影响您的最终购买结算价格。
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,69 +1,40 @@
 import { describe, expect, it } from 'vitest';
-import { DEFAULT_LOCALE, LOCALES, htmlLang, localizePath, switchLocalePath, toLocale } from './locales';
+import { DEFAULT_LOCALE, LOCALES, htmlLang, localizePath, toLocale } from './locales';
 import { ui, useTranslations } from './ui';
 
 describe('locales', () => {
-  it('serves English by default and Brazilian Portuguese', () => {
-    expect(DEFAULT_LOCALE).toBe('en');
-    expect(LOCALES).toEqual(['en', 'pt-br']);
+  it('serves Simplified Chinese by default', () => {
+    expect(DEFAULT_LOCALE).toBe('zh-CN');
+    expect(LOCALES).toEqual(['zh-CN']);
   });
 
-  it('falls back to the default for unknown values', () => {
-    expect(toLocale('pt-br')).toBe('pt-br');
-    expect(toLocale(undefined)).toBe('en');
-    expect(toLocale('fr')).toBe('en');
+  it('falls back to default for unknown values', () => {
+    expect(toLocale(undefined)).toBe('zh-CN');
+    expect(toLocale('fr')).toBe('zh-CN');
   });
 
   it('maps locales to BCP 47 html lang values', () => {
-    expect(htmlLang('en')).toBe('en');
-    expect(htmlLang('pt-br')).toBe('pt-BR');
+    expect(htmlLang('zh-CN')).toBe('zh-CN');
   });
 });
 
 describe('localizePath', () => {
-  it('keeps English paths unprefixed', () => {
-    expect(localizePath('/ports', 'en')).toBe('/ports');
-    expect(localizePath('/', 'en')).toBe('/');
-  });
-
-  it('prefixes other locales', () => {
-    expect(localizePath('/ports/ghostty', 'pt-br')).toBe('/pt-br/ports/ghostty');
-    expect(localizePath('/', 'pt-br')).toBe('/pt-br');
-  });
-
-  it('keeps the hash', () => {
-    expect(localizePath('/docs#quickstart', 'pt-br')).toBe('/pt-br/docs#quickstart');
-  });
-});
-
-describe('switchLocalePath', () => {
-  it('moves the current page to another locale', () => {
-    expect(switchLocalePath('/ports/ghostty', 'pt-br')).toBe('/pt-br/ports/ghostty');
-    expect(switchLocalePath('/pt-br/ports/ghostty', 'en')).toBe('/ports/ghostty');
-    expect(switchLocalePath('/pt-br', 'en')).toBe('/');
-    expect(switchLocalePath('/pt-br/', 'en')).toBe('/');
-    expect(switchLocalePath('/', 'pt-br')).toBe('/pt-br');
+  it('keeps paths unprefixed', () => {
+    expect(localizePath('/brands')).toBe('/brands');
+    expect(localizePath('/')).toBe('/');
   });
 });
 
 describe('ui dictionary', () => {
-  it('has the same keys in every locale', () => {
-    const keys = Object.keys(ui.en).sort();
-    for (const locale of LOCALES) {
-      expect(Object.keys(ui[locale]).sort(), locale).toEqual(keys);
+  it('has no empty strings in zh-CN', () => {
+    for (const [key, value] of Object.entries(ui['zh-CN'])) {
+      expect(value.trim(), `zh-CN.${key}`).not.toBe('');
     }
   });
 
-  it('has no empty strings', () => {
-    for (const locale of LOCALES) {
-      for (const [key, value] of Object.entries(ui[locale])) {
-        expect(value.trim(), `${locale}.${key}`).not.toBe('');
-      }
-    }
-  });
-
-  it('interpolates {placeholders}', () => {
-    const t = useTranslations('pt-br');
-    expect(t('ports.count', { count: 11 })).toContain('11');
+  it('translates navigation keys properly', () => {
+    const t = useTranslations('zh-CN');
+    expect(t('nav.home')).toBe('首页');
+    expect(t('nav.brands')).toBe('品牌测评库');
   });
 });

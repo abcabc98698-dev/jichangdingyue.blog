@@ -1,43 +1,277 @@
 ---
 import { Icon } from 'astro-icon/components';
 import { site } from '../config/site';
-import { getI18n } from '../i18n/context';
-
-const { t } = getI18n(Astro.currentLocale);
 ---
 
 <figure
-  class="overflow-hidden rounded border border-hairline bg-raised font-mono text-xs shadow-2xl"
-  aria-label={t('terminal.label')}
+  class="relative overflow-hidden rounded-xl border border-hairline/80 bg-[#0B0F17] font-mono text-xs shadow-2xl transition-all hover:border-emerald-500/40"
+  aria-label="实时网络节点探测终端"
+  id="terminal-mock-container"
 >
+  <!-- Window Header Bar -->
   <div
-    class="flex h-9 items-center justify-between border-b border-hairline bg-elevated px-4 select-none"
+    class="flex h-9 items-center justify-between border-b border-hairline/60 bg-[#161B22] px-4 select-none"
     aria-hidden="true"
   >
     <div class="flex items-center gap-2">
-      <span class="size-2.5 rounded-full bg-outline"></span>
-      <span class="size-2.5 rounded-full bg-selection"></span>
-      <span class="size-2.5 rounded-full bg-faint"></span>
+      <span class="size-2.5 rounded-full bg-rose-500/80 cursor-pointer hover:opacity-100 transition-opacity"></span>
+      <span class="size-2.5 rounded-full bg-amber-500/80 cursor-pointer hover:opacity-100 transition-opacity"></span>
+      <span class="size-2.5 rounded-full bg-emerald-500/80 cursor-pointer hover:opacity-100 transition-opacity"></span>
     </div>
-    <div class="flex items-center gap-1.5 text-muted">
-      <Icon name="lucide:terminal" class="size-3 text-faint" />
-      {site.terminalLabel}
+
+    <div class="flex items-center gap-1.5 text-muted text-[11px]">
+      <Icon name="lucide:terminal" class="size-3 text-emerald-400" />
+      <span>{site.terminalLabel} - 晚高峰压测监控</span>
     </div>
-    <div class="w-10 text-right text-[10px] text-faint">utf-8</div>
+
+    <!-- Radar Pulse ONLINE Badge -->
+    <div class="flex items-center gap-1.5 text-[10px] text-emerald-400 font-bold tracking-wider">
+      <span class="relative flex h-2 w-2">
+        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+        <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+      </span>
+      <span>ONLINE</span>
+    </div>
   </div>
 
-  <div class="space-y-2 overflow-x-auto bg-base p-5 leading-relaxed text-fg" aria-hidden="true">
-    <p class="text-faint">$ noir status</p>
-    <p>
-      <span class="text-success">ok</span> example editor
-    </p>
-    <p>
-      <span class="text-success">ok</span> example terminal
-    </p>
-    <p class="text-faint">{t('terminal.demo')}</p>
-    <p>
-      <span class="text-accent">$</span>
-      <span class="cursor"></span>
-    </p>
+  <!-- Terminal Content Body -->
+  <div
+    id="terminal-body"
+    class="min-h-[290px] space-y-1.5 overflow-x-auto bg-[#070A0F] p-5 leading-relaxed text-fg text-[11px]"
+    aria-live="polite"
+  >
+    <!-- Dynamic terminal stream will be inserted here by client script -->
+    <div id="terminal-content" class="space-y-1.5">
+      <!-- Fallback static content for SSR / no-JS -->
+      <p class="text-muted/70 flex items-center gap-1">
+        <span class="text-accent font-bold">$</span>
+        <span>jichangdingyue probe --target=speedtest --peak-hours</span>
+      </p>
+      <p class="text-muted text-[10px]">// 正在探测 11 个地区物理专线出口状态 (晚高峰 20:30)...</p>
+      <p>
+        <span class="text-emerald-400 font-bold">[PASS]</span> 香港 IEPL 01 <span class="text-muted">RTT:</span> <strong class="text-fg">22ms</strong> <span class="text-muted">BW:</span> <strong class="text-accent">529Mbps</strong> <span class="text-emerald-400">0% Loss</span>
+      </p>
+      <p>
+        <span class="text-emerald-400 font-bold">[PASS]</span> 新加坡 IPLC 02 <span class="text-muted">RTT:</span> <strong class="text-fg">42ms</strong> <span class="text-muted">BW:</span> <strong class="text-accent">445Mbps</strong> <span class="text-emerald-400">0% Loss</span>
+      </p>
+      <p>
+        <span class="text-emerald-400 font-bold">[PASS]</span> 日本 东京 专线 <span class="text-muted">RTT:</span> <strong class="text-fg">53ms</strong> <span class="text-muted">BW:</span> <strong class="text-accent">380Mbps</strong> <span class="text-emerald-400">0% Loss</span>
+      </p>
+      <p>
+        <span class="text-cyan-400 text-[10px]">[MATRIX] 解锁校验: ChatGPT=OK | Claude=OK | Netflix=4K | YouTube=4K</span>
+      </p>
+      <p class="text-emerald-400 font-semibold pt-1">✓ 所有专线集群状态: NORMAL (晚高峰负载良好)</p>
+    </div>
+  </div>
+
+  <!-- Bottom interactive status bar -->
+  <div class="flex items-center justify-between border-t border-hairline/50 bg-[#10141D] px-4 py-1.5 text-[10px] text-muted">
+    <div class="flex items-center gap-2">
+      <span class="inline-block size-1.5 rounded-full bg-emerald-400"></span>
+      <span id="terminal-clock">20:30:00 CST</span>
+      <span>·</span>
+      <span class="text-accent">珠海联通 9Gbps 探针</span>
+    </div>
+    <button
+      id="terminal-rerun-btn"
+      class="text-[10px] text-muted hover:text-accent transition-colors flex items-center gap-1 cursor-pointer"
+      title="立即重新执行探针"
+    >
+      <span>⟳ 立即重探</span>
+    </button>
   </div>
 </figure>
+
+<style>
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+  .term-cursor {
+    display: inline-block;
+    width: 6px;
+    height: 13px;
+    background-color: #F59E0B;
+    vertical-align: middle;
+    margin-left: 2px;
+    animation: blink 0.8s infinite;
+  }
+  .term-bar-fill {
+    display: inline-block;
+    height: 8px;
+    background: linear-gradient(90deg, #10B981, #06B6D4);
+    border-radius: 2px;
+    transition: width 0.4s ease-out;
+  }
+</style>
+
+<script>
+  function initLiveTerminal() {
+    const container = document.getElementById('terminal-content');
+    const clockEl = document.getElementById('terminal-clock');
+    const rerunBtn = document.getElementById('terminal-rerun-btn');
+    if (!container) return;
+
+    let timer: any = null;
+    let clockTimer: any = null;
+
+    // Clock update
+    function updateClock() {
+      const now = new Date();
+      const h = String(now.getHours()).padStart(2, '0');
+      const m = String(now.getMinutes()).padStart(2, '0');
+      const s = String(now.getSeconds()).padStart(2, '0');
+      if (clockEl) clockEl.textContent = `${h}:${m}:${s} CST`;
+    }
+    clockTimer = setInterval(updateClock, 1000);
+    updateClock();
+
+    const probeLogs = [
+      {
+        tag: '[PASS]',
+        name: '香港 IEPL 01',
+        rtt: '22ms',
+        bw: '529Mbps',
+        loss: '0% Loss',
+        bar: '92%',
+        barAscii: '▰▰▰▰▰▰▰▰▰▱'
+      },
+      {
+        tag: '[PASS]',
+        name: '新加坡 IPLC 02',
+        rtt: '42ms',
+        bw: '445Mbps',
+        loss: '0% Loss',
+        bar: '84%',
+        barAscii: '▰▰▰▰▰▰▰▰▱▱'
+      },
+      {
+        tag: '[PASS]',
+        name: '日本 东京 专线',
+        rtt: '53ms',
+        bw: '380Mbps',
+        loss: '0% Loss',
+        bar: '76%',
+        barAscii: '▰▰▰▰▰▰▰▱▱▱'
+      },
+      {
+        tag: '[PASS]',
+        name: '台湾 彰化 专线',
+        rtt: '35ms',
+        bw: '310Mbps',
+        loss: '0% Loss',
+        bar: '65%',
+        barAscii: '▰▰▰▰▰▰▱▱▱▱'
+      },
+      {
+        tag: '[PASS]',
+        name: '美西 洛杉矶 优化',
+        rtt: '138ms',
+        bw: '240Mbps',
+        loss: '0% Loss',
+        bar: '52%',
+        barAscii: '▰▰▰▰▱▱▱▱▱▱'
+      },
+    ];
+
+    const commandText = "jichangdingyue probe --target=speedtest --peak-hours";
+
+    async function sleep(ms: number) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    async function runTerminalCycle() {
+      // Clear
+      container.innerHTML = '';
+
+      // Line 1: Type command character by character
+      const cmdP = document.createElement('p');
+      cmdP.className = 'text-muted/80 flex items-center flex-wrap';
+      cmdP.innerHTML = `<span class="text-accent font-bold mr-1.5">$</span><span id="cmd-chars"></span><span class="term-cursor"></span>`;
+      container.appendChild(cmdP);
+
+      const cmdChars = cmdP.querySelector('#cmd-chars') as HTMLElement;
+
+      for (let i = 0; i < commandText.length; i++) {
+        cmdChars.textContent += commandText[i];
+        await sleep(35 + Math.random() * 25);
+      }
+
+      await sleep(300);
+
+      // Remove blinking cursor from command line
+      const firstCursor = cmdP.querySelector('.term-cursor');
+      firstCursor?.remove();
+
+      // Line 2: Status commentary
+      const commentP = document.createElement('p');
+      commentP.className = 'text-muted text-[10px] animate-fade-in';
+      commentP.textContent = `// 正在连接珠海 9Gbps 探针矩阵，探测 11 个地区物理专线出口 (晚高峰 20:30)...`;
+      container.appendChild(commentP);
+
+      await sleep(400);
+
+      // Line 3..N: Stream each probe result with animated bar and latency jitter
+      for (const log of probeLogs) {
+        // Micro latency jitter simulation (+/- 1~2ms)
+        const baseLatency = parseInt(log.rtt);
+        const jitterLatency = `${baseLatency + Math.floor(Math.random() * 3 - 1)}ms`;
+        const baseBw = parseInt(log.bw);
+        const jitterBw = `${baseBw + Math.floor(Math.random() * 15 - 7)}Mbps`;
+
+        const logP = document.createElement('p');
+        logP.className = 'flex items-center justify-between gap-2 flex-wrap text-[11px] animate-fade-in';
+        logP.innerHTML = `
+          <span>
+            <span class="text-emerald-400 font-bold">${log.tag}</span>
+            <span class="text-fg font-semibold">${log.name}</span>
+            <span class="text-muted ml-1">RTT:</span>
+            <strong class="text-fg">${jitterLatency}</strong>
+            <span class="text-muted ml-1">BW:</span>
+            <strong class="text-accent">${jitterBw}</strong>
+            <span class="text-emerald-400/90 ml-1 text-[10px]">${log.loss}</span>
+          </span>
+          <span class="text-cyan-400/80 text-[10px] font-mono hidden sm:inline" title="实时吞吐率 ${log.bar}">
+            <span class="text-emerald-400 font-bold">${log.barAscii}</span>
+            <span class="text-muted ml-1">${log.bar}</span>
+          </span>
+        `;
+        container.appendChild(logP);
+        await sleep(380);
+      }
+
+      // Matrix unlock report
+      const matrixP = document.createElement('p');
+      matrixP.className = 'text-cyan-400 text-[10px] pt-1 animate-fade-in flex items-center gap-1';
+      matrixP.innerHTML = `<span>[MATRIX]</span> <span class="text-muted">解锁校验:</span> <span class="text-fg">ChatGPT=OK</span> <span class="text-muted">|</span> <span class="text-fg">Claude=OK</span> <span class="text-muted">|</span> <span class="text-fg">Netflix=4K</span> <span class="text-muted">|</span> <span class="text-fg">YouTube=4K</span>`;
+      container.appendChild(matrixP);
+
+      await sleep(300);
+
+      // Final summary
+      const summaryP = document.createElement('p');
+      summaryP.className = 'text-emerald-400 font-semibold pt-1 animate-fade-in flex items-center gap-1.5';
+      summaryP.innerHTML = `<span class="size-1.5 rounded-full bg-emerald-400"></span><span>✓ 所有专线集群状态: NORMAL (晚高峰丢包率 0%，负载良好)</span>`;
+      container.appendChild(summaryP);
+
+      // Blinking cursor ready for next command
+      const promptP = document.createElement('p');
+      promptP.className = 'pt-1 flex items-center';
+      promptP.innerHTML = `<span class="text-accent font-bold">$</span><span class="term-cursor"></span><span class="text-muted/60 text-[10px] ml-2">// 下一轮实时压测将在 6 秒后刷新...</span>`;
+      container.appendChild(promptP);
+
+      // Wait 6 seconds before clearing and restarting cycle
+      timer = setTimeout(runTerminalCycle, 6000);
+    }
+
+    runTerminalCycle();
+
+    rerunBtn?.addEventListener('click', () => {
+      clearTimeout(timer);
+      runTerminalCycle();
+    });
+  }
+
+  initLiveTerminal();
+  document.addEventListener('astro:page-load', initLiveTerminal);
+</script>

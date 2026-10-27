@@ -1,0 +1,114 @@
+---
+const decisionBranches = [
+  {
+    title: '💰 预算极度敏感（月均支出 5~10 元以内）',
+    desc: '适合学生党、仅查文献、偶尔查阅 GitHub / Google 的用户，要求绝对平价且具备专线托底。',
+    recommendations: [
+      { name: '大佬云', tag: '¥5.6/月起', feature: 'IEPL专线 + VLESS，极限平价首选', slug: 'dalaoyun' },
+      { name: '微风网络', tag: '¥7/月 (折合)', feature: 'IEPL专线 + 7x24小时客服响应', slug: 'weifeng' },
+      { name: '闪电鼠', tag: '¥5.6/月起', feature: '极低预算，季付及以上7折', slug: 'shandianshu' },
+    ],
+  },
+  {
+    title: '🚀 新手小白 · 免折腾（不想配置订阅与规则）',
+    desc: '第一次接触科学上网，不想折腾 Clash 配置、内核与分流规则，要求下载客户端登录即连。',
+    recommendations: [
+      { name: '飞猫云', tag: '¥7/月起', feature: '专属客户端开箱即用，免配置导入', slug: 'feimao' },
+      { name: 'Firefly', tag: '¥8/月起', feature: 'IPLC专线 + 自带客户端，全节点不限速', slug: 'firefly' },
+      { name: '梯子云', tag: '¥7.4/月起', feature: '自研客户端+通用订阅双支持，进退自如', slug: 'tiziyun' },
+    ],
+  },
+  {
+    title: '💼 跨境办公 · 晚高峰零抖动（高稳定性与低丢包）',
+    desc: '面向远程开发者、跨境外贸与学术研究，核心诉求是晚高峰 20:00~23:00 不断联、不掉速、零丢包。',
+    recommendations: [
+      { name: '光速云', tag: '本站第一主推', feature: 'IEPL+企业内网双专线架构，2020老牌', slug: 'guangsu' },
+      { name: '闪跃', tag: '骨干网直连', feature: '顶级纯 IPLC 线路，极低延迟抖动', slug: 'shanyue' },
+      { name: '一翻云', tag: '原生住宅IP', feature: 'IEPL物理专线 + Hysteria 2 极速抗封锁', slug: 'yifan' },
+    ],
+  },
+  {
+    title: '⏳ 备用防断联 · 不想被月租捆绑（按量不限时）',
+    desc: '平时主要用公司或校园网，仅出差或主力梯子维护时临时调用，需要流量不过期、用多少扣多少。',
+    recommendations: [
+      { name: '光速云永久包', tag: '¥147 / 247GB', feature: '致敬147永久套餐，流量不过期', slug: 'guangsu' },
+      { name: '星岛梦不限时', tag: '¥100 / 100GB', feature: '1倍率不限速不限设备，永久有效', slug: 'xingdaomeng' },
+      { name: '二猫云不过期', tag: '¥99 / 100GB', feature: '全线 IEPL 专线，备用应急极品', slug: 'ermao' },
+    ],
+  },
+  {
+    title: '🤖 AI 工具重度生产力（ChatGPT / Claude / Gemini）',
+    desc: '重点解决 OpenAI / Anthropic 的机房 IP 封控与降权，要求纯净原生 IP，不跳验证码。',
+    recommendations: [
+      { name: '速界', tag: '¥25/月', feature: '25元档唯一明确强调 AI 优化的品牌', slug: 'sujie' },
+      { name: '唯兔云', tag: '¥14.9/月起', feature: 'ChatGPT/Claude/Gemini 全能可用', slug: 'weitu' },
+      { name: '光速云', tag: '高画质解锁', feature: '亚太低延迟节点配合原生落地', slug: 'guangsu' },
+    ],
+  },
+];
+---
+
+<div class="my-8 rounded-xl border border-hairline bg-raised/40 p-6 font-mono text-xs shadow-xl">
+  <div class="mb-6">
+    <div class="text-xs text-accent font-semibold uppercase tracking-wider mb-1">
+      // 10-SECOND DECISION TREE
+    </div>
+    <h3 class="text-xl font-bold text-fg">
+      10 秒选型决策树：快速锁定适合你的方案
+    </h3>
+    <p class="text-xs text-muted mt-1">
+      告别几十个品牌的眼花缭乱，根据你的最核心痛点直接对号入座
+    </p>
+  </div>
+
+  <div class="space-y-5">
+    {decisionBranches.map((branch, idx) => (
+      <div class="rounded-lg border border-hairline bg-base/70 p-4 hover:border-accent/50 transition-colors">
+        <div class="flex items-center gap-2 mb-1.5">
+          <span class="rounded bg-accent/20 px-1.5 py-0.5 text-[10px] font-bold text-accent">
+            分支 0{idx + 1}
+          </span>
+          <h4 class="text-sm font-bold text-fg">
+            {branch.title}
+          </h4>
+        </div>
+        <p class="text-xs text-muted mb-3 leading-relaxed">
+          {branch.desc}
+        </p>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+          {branch.recommendations.map(rec => (
+            <div class="flex flex-col justify-between rounded border border-hairline/70 bg-raised/50 p-2.5">
+              <div>
+                <div class="flex items-center justify-between mb-1">
+                  <a href={`/brands/${rec.slug}`} class="font-bold text-fg hover:text-accent transition-colors">
+                    {rec.name}
+                  </a>
+                  <span class="rounded bg-base px-1.5 py-0.5 text-[10px] text-emerald-400 font-semibold border border-hairline">
+                    {rec.tag}
+                  </span>
+                </div>
+                <div class="text-[11px] text-muted leading-tight">
+                  {rec.feature}
+                </div>
+              </div>
+              <div class="mt-2.5 flex items-center justify-between text-[11px] pt-1.5 border-t border-hairline/40">
+                <a href={`/brands/${rec.slug}`} class="text-muted hover:text-fg">
+                  详情报告
+                </a>
+                <a
+                  href={`/go/${rec.slug}`}
+                  target="_blank"
+                  rel="nofollow sponsored noopener"
+                  class="text-accent font-bold hover:underline"
+                >
+                  直达 →
+                </a>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    ))}
+  </div>
+</div>
